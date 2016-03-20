@@ -1,7 +1,7 @@
 'use strict';
 
 import React from 'react';
-import { Link } from 'react-router'
+import {Link , browserHistory} from 'react-router'
 import NoWidgets from '../../src/components/NoWidgetsComponent';
 
 require('styles//HomePage.scss');
@@ -23,7 +23,10 @@ class HomePageComponent extends React.Component {
           Home Page
         </header>
         <div className="mainListWidget">
-          <Link to={'/create'}>
+          <Link to={browserHistory.createHref('/')} activeClassName="active" onlyActiveOnIndex={true}>
+            Back
+          </Link>
+          <Link to={browserHistory.createHref('/create')}  activeClassName="active">
             Create Widget
           </Link>
           {
@@ -39,6 +42,7 @@ class HomePageComponent extends React.Component {
               :
               <NoWidgets/>
           }
+            {this.props.children}
         </div>
       </div>
     );

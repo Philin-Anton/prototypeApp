@@ -8,7 +8,7 @@ class WidgetCreatePageComponent extends React.Component {
   render() {
     return (
       <div className="widgetcreatepage-component">
-        Please edit src/components///WidgetCreatePageComponent.js to update this component!
+        Please edit src/components {/*WidgetCreatePageComponent.js to update this component!*/}
       </div>
     );
   }
