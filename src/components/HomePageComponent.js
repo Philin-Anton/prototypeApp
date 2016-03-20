@@ -2,9 +2,12 @@
 
 import React from 'react';
 import {Link , browserHistory} from 'react-router'
+
 import NoWidgets from '../../src/components/NoWidgetsComponent';
 
 require('styles//HomePage.scss');
+
+
 
 class HomePageComponent extends React.Component {
   constructor(props) {
@@ -17,6 +20,7 @@ class HomePageComponent extends React.Component {
   }
 
   render() {
+    window.console.log(this.state, 'HomePageComponent');
     return (
       <div className="homepage-component">
         <header className="header">

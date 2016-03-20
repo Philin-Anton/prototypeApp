@@ -4,6 +4,7 @@ import React from 'react';
 import { Router, Route, IndexRoute, /*hashHistory,*/ useRouterHistory } from 'react-router'
 import { createHashHistory } from 'history'
 
+
 import HomePageWidget from '../../src/components/HomePageComponent';
 import WidgetCreatePage from '../../src/components/WidgetCreatePageComponent';
 
@@ -14,6 +15,7 @@ class Home extends React.Component {
     super(props);
   }
   render(){
+    window.console.log(this.state, 'Main.js');
     return(
       <div>
         <h2>{this.props.params.repoName}</h2>
