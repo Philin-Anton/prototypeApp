@@ -34,7 +34,6 @@ class ContainerComponent extends React.Component {
       cardsByIndex
     };
 
-    window.console.log(this.state, 'ContainerComponent');
   }
 
   moveCard(id, afterId) {

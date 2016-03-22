@@ -20,7 +20,6 @@ class HomePageComponent extends React.Component {
   }
 
   render() {
-    window.console.log(this.state, 'HomePageComponent');
     return (
       <div className="homepage-component">
         <header className="header">

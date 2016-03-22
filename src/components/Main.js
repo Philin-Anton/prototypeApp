@@ -8,6 +8,9 @@ import { createHashHistory } from 'history'
 import HomePageWidget from '../../src/components/HomePageComponent';
 import WidgetCreatePage from '../../src/components/WidgetCreatePageComponent';
 
+
+import WidgetsList from './widgets/WidgetsListComponent.js';
+
 const appHistory = useRouterHistory(createHashHistory)({ queryKey: false });
 
 class Home extends React.Component {
@@ -48,9 +51,11 @@ class AppComponent extends React.Component {
     window.console.log(appHistory, 'hashHistory');
     return(
       <Router history={appHistory}>
-        <Route path="/" component={HomePageWidget}>
+        <Route path="/" component={WidgetsList}>
+        </Route>
+        <Route path="/a" component={HomePageWidget}>
           <IndexRoute component={Home}/>
-          <Route path="/create" component={WidgetCreatePage}/>
+          <Route path="/a/create" component={WidgetCreatePage}/>
         </Route>
       </Router>
     )
