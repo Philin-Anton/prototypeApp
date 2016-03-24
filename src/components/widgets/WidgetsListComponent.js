@@ -78,6 +78,7 @@ class WidgetsListComponent extends React.Component {
 
   drawFrame() {
     const nextState = update(this.state, this.pendingUpdateFn);
+
     this.setState(nextState);
 
     localStorage.clear();
