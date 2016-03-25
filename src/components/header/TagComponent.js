@@ -60,7 +60,7 @@ class TagComponent extends React.Component {
       <div className="tag-component">
         <div className="add-tags" onClick={this.newTags.bind(this)}>
           <Icon glyph="tag"/>
-          { this.state.newTag ?  returnNewTag() : null}
+          { this.state.newTag ?  this.returnNewTag.bind(this) : null}
         </div>
         <div className="return-tags">
           {
