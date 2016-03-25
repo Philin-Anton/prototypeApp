@@ -1,0 +1,16 @@
+.index-component {
+  border: 1px dashed #f00;
+  color: #000;
+
+  .topPlace {
+    background: #000;
+    img {
+      vertical-align: middle;
+      max-width: 200px;
+    }
+  }
+  .header-control{
+    display: flex;
+
+  }
+}

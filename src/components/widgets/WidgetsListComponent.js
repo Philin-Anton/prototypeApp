@@ -8,12 +8,11 @@ import HTML5Backend from 'react-dnd-html5-backend';
 
 import WidgetBlocksList from './WidgetBlocksListComponent';
 
-
 require('styles/widgets/WidgetsList.scss');
 
 class WidgetsListComponent extends React.Component {
-  constructor(props) {
-    super(props);
+  constructor(props, context) {
+    super(props, context);
 
     this.addWidget = this.addWidget.bind(this);
     this.drawFrame = this.drawFrame.bind(this);

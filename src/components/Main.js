@@ -1,43 +1,27 @@
 require('normalize.css');
 require('styles/App.css');
 import React from 'react';
-import { Router, Route, IndexRoute, /*hashHistory,*/ useRouterHistory } from 'react-router'
+import { Router, Route, useRouterHistory } from 'react-router'
 import { createHashHistory } from 'history'
 
 import { Provider } from 'react-redux'
 
 
-import reducer from '../reducers/index';
+import store from '../reducers/index';
 
-import HomePageWidget from './HomePageComponent';
-import WidgetCreatePage from './WidgetCreatePageComponent';
-
-
-import WidgetsList from './widgets/WidgetsListComponent.js';
+import HomeContainer from './HomeContainerComponent';
 
 const appHistory = useRouterHistory(createHashHistory)({ queryKey: false });
 
-class Home extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-  render(){
-    window.console.log(this.state, 'Main.js');
-    return(
-      <div>
-        <h2>{this.props.params.repoName}</h2>
-      </div>
-    )
-  }
-}
 class AppComponent extends React.Component {
 
-  constructor(props) {
-    super(props);
+  constructor(props, context) {
+    super(props, context);
   }
 
   static getContent(){
-    return window.console.log('getContent')
+
+    return store.getState();
   }
 
   static setContent(json, callBack){
@@ -53,23 +37,16 @@ class AppComponent extends React.Component {
 
   render() {
 
-    reducer.dispatch({
+    store.dispatch({
       type: 'ADD_WIDGET_BLOCKS'
     });
 
-    window.console.log(reducer.getState(), 'reducer');
-
-
+    window.console.log(store.getState(), 'reducer');
 
     return(
-      <Provider store={reducer}>
+      <Provider store={store}>
         <Router history={appHistory}>
-          <Route path="/" component={WidgetsList}>
-          </Route>
-          <Route path="/a" component={HomePageWidget}>
-            <IndexRoute component={Home}/>
-            <Route path="/a/create" component={WidgetCreatePage}/>
-          </Route>
+          <Route path="/" component={HomeContainer}/>
         </Router>
       </Provider >
     )

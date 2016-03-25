@@ -1,0 +1,34 @@
+.tag-component {
+  border: 1px dashed #f00;
+  display: flex;
+  .add-tags {
+    font-size: 40px;
+    cursor: pointer;
+    margin: 0 20px 0 0;
+    &:hover {
+      color: #3f3f3f;
+    }
+  }
+  .return-tags {
+    display: flex;
+    .return-tag {
+      display: flex;
+      padding: 5px;
+      border: 1px solid #000;
+      border-radius: 20px;
+      .remove-tag {
+        opacity: 0;
+        cursor: pointer;
+        &:hover {
+          color: #3f3f3f;
+        }
+      }
+
+      &:hover {
+        .remove-tag {
+          opacity: 1;
+        }
+      }
+    }
+  }
+}
