@@ -5,10 +5,23 @@ import React from 'react';
 require('styles/header/Title.scss');
 
 class TitleComponent extends React.Component {
+  constructor(props, context) {
+    super(props, context);
+    this.getTitle = this.getTitle.bind();
+  }
+
+  getTitle(){
+    if(this && this.prop){
+      return this.prop.title ? this.prop.title : null;
+    }else{
+      return null;
+    }
+  }
+
   render() {
     return (
       <div className="title-component">
-        Please edit src/components/header//TitleComponent.js to update this component!
+        <input type="text" value={this.getTitle()} placeholder="Title"/>
       </div>
     );
   }
