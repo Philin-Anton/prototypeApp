@@ -1,11 +1,11 @@
 /**
  * Created by Anton.Filin on 23.03.2016.
  */
-import WidgetBlocks from './WidgetBlocks'
+import WidgetBlocks from './WidgetBlocks';
 
-import logger from 'redux-logger'
-import thunk from 'redux-thunk'
-import { combineReducers, createStore, applyMiddleware } from 'redux'
+import logger from 'redux-logger';
+import thunk from 'redux-thunk';
+import { combineReducers, createStore, applyMiddleware } from 'redux';
 let reducer = combineReducers({ WidgetBlocks });
 
 const middleware = process.env.NODE_ENV === 'production' ?

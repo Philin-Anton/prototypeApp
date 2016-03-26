@@ -4,7 +4,14 @@ import React from 'react';
 import { connect } from 'react-redux'
 import { createSelector } from 'reselect'
 
+import { actionWidgetTag} from '../../actions/index';
+const getAllTags =  actionWidgetTag.getAllTags;
+const addToTag =  actionWidgetTag.addToTag;
+const deleteToTag =  actionWidgetTag.deleteToTag;
+
 import Icon from '../glyphicon/IndexComponent';
+
+import {drawFrame} from '../../api/maggo';
 
 require('styles/header/Tag.scss');
 
@@ -16,21 +23,44 @@ class TagComponent extends React.Component {
       newTag: false,
       nameNewTag: ''
     };
+    this.drawFrame = drawFrame(this.state);
 
     this.returnTag = this.returnTag.bind(this);
     this.newTags = this.newTags.bind(this);
-    this.addTags = this.addTags.bind(this);
   }
 
   newTags(){
-    this.setState()
+    const nextState = this.drawFrame({
+      $set:{
+        newTag: true
+      }
+    });
+    this.setState(nextState);
+    //this.refs.inputNewTag.getDOMNode().focus()
   }
   addTags(){
-    const nameTag = this.getState().nameNewTag;
-    window.console.log(nameTag);
+    const nameTag = this.state.nameNewTag;
+    this.props.addToTag(nameTag);
+    const nextState = this.drawFrame({
+      $set:{
+        nameNewTag: ''
+      }
+    });
+    this.setState(nextState);
+    this.refs.inputNewTag.getDOMNode().focus();
+    window.console.log(this);
   }
-  deleteTags(/*id*/){
+  deleteTags(id){
+    this.props.deleteToTag(id);
+  }
 
+  onChange(event){
+    const nextState = this.drawFrame({
+      $set:{
+        nameNewTag: event.target.value
+      }
+    });
+    this.setState(nextState);
   }
 
   returnTag(tag){
@@ -49,8 +79,8 @@ class TagComponent extends React.Component {
   returnNewTag(){
     return (
       <div className="return-tag">
-        <input type="text" value={this.state.nameNewTag} />
-        <bottom onClick={this.addTags}>Add Tag</bottom>
+        <input type="text" ref="inputNewTag"  value={this.state.nameNewTag} onChange={this.onChange.bind(this)} />
+        <bottom onClick={this.addTags.bind(this)}>Add Tag</bottom>
       </div>
     )
   }
@@ -60,7 +90,7 @@ class TagComponent extends React.Component {
       <div className="tag-component">
         <div className="add-tags" onClick={this.newTags.bind(this)}>
           <Icon glyph="tag"/>
-          { this.state.newTag ?  this.returnNewTag.bind(this) : null}
+          { this.state.newTag ?  this.returnNewTag.bind(this)() : null}
         </div>
         <div className="return-tags">
           {
@@ -83,10 +113,10 @@ TagComponent.displayName = 'HeaderTagComponent';
 //};
 // TagComponent.defaultProps = {};
 
-const getTags = state => state.WidgetBlocks.tags ? state.WidgetBlocks.tags : {tags: [{id: 0, name:'asdasd'}]};
+const getAllState = state => state.WidgetBlocks;
 
-const select = createSelector([getTags], tags => {
-  return tags;
+const select = createSelector([getAllState], state => {
+  return state;
 });
 
-export default connect(select)(TagComponent);
+export default connect(select, {deleteToTag, getAllTags, addToTag})(TagComponent);

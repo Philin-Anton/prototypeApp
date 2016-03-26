@@ -3,29 +3,21 @@
  */
 
 import * as types from '../constants/ActionTypes';
-import update from 'react/lib/update';
+import {drawFrame} from '../api/maggo';
+import {tagController} from './controllers/index';
+
 
 const InitState = {
   widgetsById:{},
-  widgetsByIndex:[]
+  widgetsByIndex:[],
+  tags:[]
 };
 
 function WidgetBlocks(state = InitState, action){
 
-  var GlobalSugar = {
-    drawFrame: function(updateFn){
-      const nextState = update(state, updateFn);
-      this.requestedFrame = null;
-      window.console.log(nextState);
-      return nextState;
-    },
-    scheduleUpdate: function(updateFn){
+  const _drawFrame = drawFrame(state);
+  const _tagController = tagController(state, action, _drawFrame);
 
-      if (!this.requestedFrame) {
-        this.requestedFrame = requestAnimationFrame(this.drawFrame.bind(this, updateFn));
-      }
-    }
-  };
 
   switch (action.type) {
     case types.REORDER_WIDGET_BLOCKS:
@@ -41,7 +33,7 @@ function WidgetBlocks(state = InitState, action){
 
       state.widgetsById[ID] = newWidgets;
 
-      return GlobalSugar.drawFrame({
+      return _drawFrame({
         widgetsById: {
           $set: state.widgetsById
         },
@@ -54,6 +46,19 @@ function WidgetBlocks(state = InitState, action){
 
     case types.REMOVE_WIDGET_BLOCKS:
       return action;
+
+    case types.GET_TAGS:
+
+      return _tagController.getTags();
+
+    case types.ADD_TAG:
+
+      return _tagController.addTag();
+
+    case types.DELETE_TAG:
+
+      return _tagController.deleteTag();
+
     default:
       return state
   }

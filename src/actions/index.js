@@ -1,55 +1,31 @@
 /**
  * Created by Anton.Filin on 24.03.2016.
  */
-import shop from '../api/shop'
-import * as types from '../constants/ActionTypes'
 
+import * as ActionWidgetTag from './ActionWidgetTag';
+import * as ActionWidgetTitle from './ActionWidgetTitle';
+import * as ActionWidgetBlock from './ActionWidgetBlock';
+import * as ActionWidgetNavBar from './ActionWidgetNavBar';
+import * as ActionWidgetForSales from './ActionWidgetForSales';
+import * as ActionWidgetBodyColor from './ActionWidgetBodyColor';
 
+export const actionWidgetTag = ( () => {
+  return ActionWidgetTag;
+})();
 
-function receiveProducts(products) {
-  return {
-    type: types.RECEIVE_PRODUCTS,
-    products: products
-  }
+export function actionWidgetTitle (){
+  return ActionWidgetTitle;
+}
+export function actionWidgetBlock (){
+  return ActionWidgetBlock;
+}
+export function actionWidgetNavBar (){
+  return ActionWidgetNavBar;
+}
+export function actionWidgetForSales (){
+  return ActionWidgetForSales;
+}
+export function actionWidgetBodyColor (){
+  return ActionWidgetBodyColor;
 }
 
-export function getAllProducts() {
-  return dispatch => {
-    shop.getProducts(products => {
-      dispatch(receiveProducts(products))
-    })
-  }
-}
-
-function addToCartUnsafe(productId) {
-  return {
-    type: types.ADD_TO_CART,
-    productId
-  }
-}
-
-export function addToCart(productId) {
-  return (dispatch, getState) => {
-    if (getState().products.byId[productId].inventory > 0) {
-      dispatch(addToCartUnsafe(productId))
-    }
-  }
-}
-
-export function checkout(products) {
-  return (dispatch, getState) => {
-    const cart = getState().cart
-
-    dispatch({
-      type: types.CHECKOUT_REQUEST
-    })
-    shop.buyProducts(products, () => {
-      dispatch({
-        type: types.CHECKOUT_SUCCESS,
-        cart
-      })
-      // Replace the line above with line below to rollback on failure:
-      // dispatch({ type: types.CHECKOUT_FAILURE, cart })
-    })
-  }
-}
