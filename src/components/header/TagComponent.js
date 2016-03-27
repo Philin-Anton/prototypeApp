@@ -25,10 +25,6 @@ class TagComponent extends React.Component {
       nameNewTag: ''
     };
     this.drawFrame = drawFrame(this.state);
-
-    this.returnTag = this.returnTag.bind(this);
-    this.newTags = this.newTags.bind(this);
-
   }
 
   newTags(){
@@ -74,7 +70,7 @@ class TagComponent extends React.Component {
     this.setState(nextState);
   }
 
-  returnTag(tag){
+  renderTag(tag){
     return (
       <div className="return-tag" key={tag.id}>
         <span>
@@ -87,7 +83,7 @@ class TagComponent extends React.Component {
     )
   }
 
-  returnNewTag(){
+  renderPopUp(){
     return (
     <div>
       <div className="popup-new-tag">
@@ -115,11 +111,11 @@ class TagComponent extends React.Component {
         <div className="return-tags">
           {
             this.props.tags.map(tag => (
-              this.returnTag(tag)
+              this.renderTag(tag)
             ))
           }
         </div>
-         { this.state.newTag ?  this.returnNewTag.bind(this)() : null}
+         { this.state.newTag ?  this.renderPopUp.call(this) : null}
       </div>
 
     );
