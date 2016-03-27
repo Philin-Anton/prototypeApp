@@ -11,7 +11,7 @@ const deleteToTag =  actionWidgetTag.deleteToTag;
 
 import Icon from '../glyphicon/IndexComponent';
 
-import {drawFrame} from '../../api/maggo';
+import {drawFrame, throttle} from '../../api/maggo';
 
 require('styles/header/Tag.scss');
 
@@ -27,6 +27,9 @@ class TagComponent extends React.Component {
 
     this.returnTag = this.returnTag.bind(this);
     this.newTags = this.newTags.bind(this);
+
+
+
   }
 
   newTags(){
@@ -36,7 +39,7 @@ class TagComponent extends React.Component {
       }
     });
     this.setState(nextState);
-    //this.refs.inputNewTag.getDOMNode().focus()
+      //this.refs.inputNewTag.getDOMNode().focus()
   }
   addTags(){
     const nameTag = this.state.nameNewTag;
@@ -48,7 +51,17 @@ class TagComponent extends React.Component {
     });
     this.setState(nextState);
     this.refs.inputNewTag.getDOMNode().focus();
-    window.console.log(this);
+  }
+
+  closePopup(){
+    if(!this.state.newTag) return;
+
+    const nextState = this.drawFrame({
+      $set:{
+        newTag: false
+      }
+    });
+    this.setState(nextState);
   }
   deleteTags(id){
     this.props.deleteToTag(id);
@@ -78,11 +91,21 @@ class TagComponent extends React.Component {
 
   returnNewTag(){
     return (
-      <div className="return-tag">
-        <input type="text" ref="inputNewTag"  value={this.state.nameNewTag} onChange={this.onChange.bind(this)} />
-        <bottom onClick={this.addTags.bind(this)}>Add Tag</bottom>
+    <div>
+      <div className="popup-new-tag">
+        <input type="text" ref="inputNewTag" value={this.state.nameNewTag} onChange={this.onChange.bind(this)} />
+        <button onClick={this.addTags.bind(this)}>Add Tag</button>
+        <div className="close-popup-new-tag" onClick={this.closePopup.bind(this)}>
+          <Icon glyph="remove"/>
+        </div>
       </div>
+      <div className="background-new-tag" onClick={this.closePopup.bind(this)}></div>
+    </div>
     )
+  }
+  componentWillMount(){
+    window.addEventListener('scroll', this.closePopup.bind(this));
+    window.addEventListener('resize', this.closePopup.bind(this));
   }
 
   render() {
@@ -90,7 +113,6 @@ class TagComponent extends React.Component {
       <div className="tag-component">
         <div className="add-tags" onClick={this.newTags.bind(this)}>
           <Icon glyph="tag"/>
-          { this.state.newTag ?  this.returnNewTag.bind(this)() : null}
         </div>
         <div className="return-tags">
           {
@@ -99,6 +121,7 @@ class TagComponent extends React.Component {
             ))
           }
         </div>
+         { this.state.newTag ?  this.returnNewTag.bind(this)() : null}
       </div>
 
     );

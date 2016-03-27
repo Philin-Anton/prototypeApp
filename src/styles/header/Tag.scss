@@ -1,6 +1,7 @@
 .tag-component {
   border: 1px dashed #f00;
   display: flex;
+  position: relative;
   .add-tags {
     font-size: 40px;
     cursor: pointer;
@@ -11,11 +12,24 @@
   }
   .return-tags {
     display: flex;
+    align-items: center;
+    justify-content: center;
+
     .return-tag {
       display: flex;
       padding: 5px;
       border: 1px solid #000;
       border-radius: 20px;
+      margin-right: 5px;
+      height: 30px;
+      line-height: 20px;
+      align-items: center;
+      justify-content: center;
+      span{
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
       .remove-tag {
         opacity: 0;
         cursor: pointer;
@@ -30,5 +44,41 @@
         }
       }
     }
+  }
+  .popup-new-tag {
+    position: absolute;
+    left: 0;
+    top: 110%;
+    padding: 10px 24px 10px 10px;
+    border: 1px solid #b1b1b1;
+    background: #fff;
+    text-align: right;
+    z-index: 10;
+    input{
+      text-align: left;
+      height: 26px;
+    }
+    button {
+      display: inline-block;
+      margin-top: 5px;
+    }
+    .close-popup-new-tag {
+      position: absolute;
+      right: 5px;
+      top: 5px ;
+      cursor: pointer;
+      &:hover {
+        color: #3f3f3f;
+      }
+    }
+  }
+  .background-new-tag{
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    cursor: pointer;
+    top:0;
+    left: 0;
   }
 }
