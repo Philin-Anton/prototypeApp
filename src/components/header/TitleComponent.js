@@ -3,6 +3,7 @@
 import React from 'react';
 import { connect } from 'react-redux'
 import { createSelector } from 'reselect'
+import { throttle } from '../../api/maggo'
 
 import { actionWidgetTitle} from '../../actions/index';
 const setTitle =  actionWidgetTitle.setTitle;
@@ -10,6 +11,11 @@ const setTitle =  actionWidgetTitle.setTitle;
 require('styles/header/Title.scss');
 
 class TitleComponent extends React.Component {
+
+  constructor(props, context) {
+    super(props, context);
+    this.setTitle = throttle( this.props.setTitle, 300 );
+  }
 
   getTitle(){
     if(this && this.prop){
@@ -20,7 +26,7 @@ class TitleComponent extends React.Component {
   }
 
   onChange(event){
-   this.props.setTitle(event.target.value);
+    this.setTitle(event.target.value);
   }
 
   render() {
