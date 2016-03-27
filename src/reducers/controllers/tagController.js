@@ -8,8 +8,6 @@ class tagController {
         this.state = state;
         this.action = action;
         this.drawFrame = _drawFrame;
-
-    this.deleteTag = this.deleteTag.bind(this);
   }
 
   deleteTag(){

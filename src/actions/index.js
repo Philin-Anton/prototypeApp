@@ -13,19 +13,19 @@ export const actionWidgetTag = ( () => {
   return ActionWidgetTag;
 })();
 
-export function actionWidgetTitle (){
+export const actionWidgetTitle = ( () => {
   return ActionWidgetTitle;
-}
-export function actionWidgetBlock (){
+})();
+export const actionWidgetBlock = ( () => {
   return ActionWidgetBlock;
-}
-export function actionWidgetNavBar (){
+})();
+export const actionWidgetNavBar = ( () => {
   return ActionWidgetNavBar;
-}
-export function actionWidgetForSales (){
+})();
+export const actionWidgetForSales = ( () => {
   return ActionWidgetForSales;
-}
-export function actionWidgetBodyColor (){
+})();
+export const actionWidgetBodyColor = ( () => {
   return ActionWidgetBodyColor;
-}
+})();
 

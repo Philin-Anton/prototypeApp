@@ -1,6 +1,7 @@
 'use strict';
 
 import React from 'react';
+import ReactDOM from 'react-dom';
 import { connect } from 'react-redux'
 import { createSelector } from 'reselect'
 
@@ -11,7 +12,7 @@ const deleteToTag =  actionWidgetTag.deleteToTag;
 
 import Icon from '../glyphicon/IndexComponent';
 
-import {drawFrame, throttle} from '../../api/maggo';
+import {drawFrame} from '../../api/maggo';
 
 require('styles/header/Tag.scss');
 
@@ -28,8 +29,6 @@ class TagComponent extends React.Component {
     this.returnTag = this.returnTag.bind(this);
     this.newTags = this.newTags.bind(this);
 
-
-
   }
 
   newTags(){
@@ -39,7 +38,6 @@ class TagComponent extends React.Component {
       }
     });
     this.setState(nextState);
-      //this.refs.inputNewTag.getDOMNode().focus()
   }
   addTags(){
     const nameTag = this.state.nameNewTag;
@@ -50,7 +48,7 @@ class TagComponent extends React.Component {
       }
     });
     this.setState(nextState);
-    this.refs.inputNewTag.getDOMNode().focus();
+    ReactDOM.findDOMNode(this.refs.inputNewTag).focus();
   }
 
   closePopup(){

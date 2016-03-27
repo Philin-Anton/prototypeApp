@@ -4,19 +4,23 @@
 
 import * as types from '../constants/ActionTypes';
 import {drawFrame} from '../api/maggo';
-import {tagController} from './controllers/index';
+import {tagController, forSalesController, titleController } from './controllers/index';
 
 
 const InitState = {
   widgetsById:{},
   widgetsByIndex:[],
-  tags:[]
+  title: '',
+  tags:[],
+  forSales: false
 };
 
 function WidgetBlocks(state = InitState, action){
 
   const _drawFrame = drawFrame(state);
   const _tagController = tagController(state, action, _drawFrame);
+  const _forSalesController = forSalesController(state, action, _drawFrame);
+  const _titleController = titleController(state, action, _drawFrame);
 
 
   switch (action.type) {
@@ -58,6 +62,12 @@ function WidgetBlocks(state = InitState, action){
     case types.DELETE_TAG:
 
       return _tagController.deleteTag();
+
+    case types.CHANGE_FOR_SALES:
+      return _forSalesController.changeForSales();
+
+    case types.SET_TITLE:
+      return _titleController.setTitle();
 
     default:
       return state

@@ -1,17 +1,26 @@
 'use strict';
 
 import React from 'react';
-//import { connect } from 'react-redux'
+import { connect } from 'react-redux'
+import { createSelector } from 'reselect'
 
+import { actionWidgetForSales } from '../../actions/index';
+const changeForSales =  actionWidgetForSales.changeForSales;
 
 
 require('styles/header/ItemForSales.scss');
 
 class ItemForSalesComponent extends React.Component {
+
+  onChange(){
+    this.props.changeForSales();
+  }
+
   render() {
     return (
       <div className="itemforsales-component">
-        Please edit src/components/header//ItemForSalesComponent.js to update this component!
+        <label><input type="checkbox" onChange={this.onChange.bind(this)}/> Item For Sales</label>
+
       </div>
     );
   }
@@ -23,4 +32,10 @@ ItemForSalesComponent.displayName = 'HeaderItemForSalesComponent';
 // ItemForSalesComponent.propTypes = {};
 // ItemForSalesComponent.defaultProps = {};
 
-export default ItemForSalesComponent;
+const getAllState = state => state.WidgetBlocks;
+
+const select = createSelector([getAllState], state => {
+  return state;
+});
+
+export default connect(select, {changeForSales})(ItemForSalesComponent);

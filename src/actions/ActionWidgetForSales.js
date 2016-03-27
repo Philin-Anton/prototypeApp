@@ -3,17 +3,24 @@
  */
 'use strict';
 
+import * as types from '../constants/ActionTypes';
 
-export function ADD_TAG(text){
-  return {
-    type: 'ADD_TAG',
-    name: text
-  }
-}
 
-export const DELETE_TAG = (id) => {
+const changeForSalesUnsafe = () =>{
   return {
-    type: 'DELETE_TAG',
-    id: id
+    type: types.CHANGE_FOR_SALES
   }
 };
+
+export const changeForSales = () => {
+  return (dispatch)=> {
+      dispatch(changeForSalesUnsafe());
+  }
+};
+
+
+//const getForSalesUnsafe = () => {
+//  return {
+//    type: types.GET_FOR_SALES
+//  }
+//};
