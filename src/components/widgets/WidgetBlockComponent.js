@@ -5,6 +5,8 @@ import { DragSource, DropTarget } from 'react-dnd';
 
 import WidgetTypes from './CardTypesComponent';
 
+import NavBar from '../navBar/ControlWidgetsComponent';
+
 import { drawFrame,  classNames } from '../../api/maggo';
 
 require('styles/widgets/WidgetBlock.scss');
@@ -33,21 +35,24 @@ class WidgetBlocksListComponent extends React.Component {
     this.drawFrame = drawFrame(this.state);
   }
 
-  onClick(){
-    const {widgetsCheck, id} = this.props;
-    widgetsCheck(id);
+  onClick(event){
+    event.stopPropagation();
+    const {widgetsCheck, id, getWidgetsCheck} = this.props;
+    if(getWidgetsCheck.id != id) widgetsCheck(id);
   }
 
 
   render() {
     const {id, isDragging, connectDragSource, connectDropTarget , getWidgetsCheck} = this.props;
+    const itsRight = getWidgetsCheck.id === id;
     const className = classNames({
       'widgetblock-component':true,
       'isDragging': isDragging ? 0 : 1,
-      'check': getWidgetsCheck.id === id
+      'check': itsRight
     });
     return connectDragSource(connectDropTarget(
       <div className={className} onClick={this.onClick.bind(this)}>
+        { itsRight ? <NavBar id={id}/> : null }
 
         { id }
       </div>
