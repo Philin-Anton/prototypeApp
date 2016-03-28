@@ -5,13 +5,28 @@ import update from 'react/lib/update';
 import classnames from 'classnames';
 
 
-export const drawFrame = (state) => {
+export const setLocalStore = (store) => {
+  const storeJSON = JSON.stringify(store);
+  const nameStorage = 'MagooStore';
 
+  localStorage.clear(nameStorage);
+  localStorage.setItem(nameStorage, storeJSON);
+  return store;
+};
+
+export const getLocalStore = (ItemKey) => {
+  const nameStorage = ItemKey || 'MagooStore';
+  const storeJSON = localStorage.getItem(nameStorage);
+  return JSON.parse(storeJSON)
+};
+
+export const drawFrame = (state) => {
   return (updateFn) => {
     const nextState = update(state, updateFn);
-    window.console.log(nextState);
     return nextState;
-  }
+  };
+  //import {setLocalStore} from '../api/maggo';
+  //setLocalStore(store.getState().WidgetBlocks);
 };
 
 export const classNames = (classes) => {
@@ -25,18 +40,18 @@ export const throttle = (func, ms) => {
 
   function wrapper() {
 
-    if (isThrottled) { // (2)
+    if (isThrottled) {
       savedArgs = arguments;
       savedThis = this;
       return;
     }
 
-    func.apply(this, arguments); // (1)
+    func.apply(this, arguments);
 
     isThrottled = true;
 
-    setTimeout(function() {
-      isThrottled = false; // (3)
+    setTimeout(function () {
+      isThrottled = false;
       if (savedArgs) {
         wrapper.apply(savedThis, savedArgs);
         savedArgs = savedThis = null;

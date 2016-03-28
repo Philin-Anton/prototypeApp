@@ -16,5 +16,4 @@ let store = createStore(
   reducer,
   applyMiddleware(...middleware)
 );
-
 export default store;

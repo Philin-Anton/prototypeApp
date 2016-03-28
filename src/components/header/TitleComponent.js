@@ -14,25 +14,25 @@ class TitleComponent extends React.Component {
 
   constructor(props, context) {
     super(props, context);
-    this.setTitle = throttle( this.props.setTitle, 300 );
   }
 
   getTitle(){
-    if(this && this.prop){
-      return this.prop.title ? this.prop.title : null;
+    if(this && this.props){
+      return this.props.title ? this.props.title : null;
     }else{
       return null;
     }
   }
 
   onChange(event){
-    this.setTitle(event.target.value);
+    this.props.setTitle(event.target.value);
   }
 
   render() {
+
     return (
       <div className="title-component">
-        <input type="text" value={this.getTitle.call(this)} onChange={this.onChange.bind(this)} placeholder="Title"/>
+        <input type="text" value={this.props.title} onChange={this.onChange.bind(this)} placeholder="Title"/>
       </div>
     );
   }

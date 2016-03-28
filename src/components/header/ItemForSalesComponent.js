@@ -19,8 +19,7 @@ class ItemForSalesComponent extends React.Component {
   render() {
     return (
       <div className="itemforsales-component">
-        <label><input type="checkbox" onChange={this.onChange.bind(this)}/> Item For Sales</label>
-
+        <label><input type="checkbox" onChange={this.onChange.bind(this)}  checked={this.props.forSales}/> Item For Sales</label>
       </div>
     );
   }

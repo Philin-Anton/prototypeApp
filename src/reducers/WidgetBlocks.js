@@ -3,11 +3,11 @@
  */
 
 import * as types from '../constants/ActionTypes';
-import {drawFrame} from '../api/maggo';
+import {drawFrame, getLocalStore, setLocalStore} from '../api/maggo';
 import {tagController, forSalesController, titleController, bodyColorController, listBlockController } from './controllers/index';
 
 
-const InitState = {
+const InitState = getLocalStore() || {
   widgetsById:{},
   widgetsByIndex:[],
   title: '',
@@ -28,44 +28,51 @@ function WidgetBlocks(state = InitState, action){
   const _bodyColorController = bodyColorController(state, action, _drawFrame);
   const _listBlockController = listBlockController(state, action, _drawFrame);
 
+  const inspection = function(){
+    switch (action.type) {
+      case types.REORDER_WIDGET_BLOCKS:
 
-  switch (action.type) {
-    case types.REORDER_WIDGET_BLOCKS:
+        return _listBlockController.reorderBlocks();
 
-      return _listBlockController.reorderBlocks();
+      case types.ADD_WIDGET_BLOCKS:
 
-    case types.ADD_WIDGET_BLOCKS:
+        return _listBlockController.addBlocks();
 
-      return _listBlockController.addBlocks();
+      case types.REMOVE_WIDGET_BLOCKS:
 
-    case types.REMOVE_WIDGET_BLOCKS:
+        return _listBlockController.deleteBlocks();
 
-      return _listBlockController.deleteBlocks();
+      case types.GET_TAGS:
 
-    case types.GET_TAGS:
+        return _tagController.getTags();
 
-      return _tagController.getTags();
+      case types.ADD_TAG:
 
-    case types.ADD_TAG:
+        return _tagController.addTag();
 
-      return _tagController.addTag();
+      case types.DELETE_TAG:
 
-    case types.DELETE_TAG:
+        return _tagController.deleteTag();
 
-      return _tagController.deleteTag();
+      case types.CHANGE_FOR_SALES:
+        return _forSalesController.changeForSales();
 
-    case types.CHANGE_FOR_SALES:
-      return _forSalesController.changeForSales();
+      case types.SET_TITLE:
+        return _titleController.setTitle();
 
-    case types.SET_TITLE:
-      return _titleController.setTitle();
+      case types.SET_BODY_COLOR:
+        return _bodyColorController.setBodyColor();
 
-    case types.SET_BODY_COLOR:
-      return _bodyColorController.setBodyColor();
+      default:
+        return state
+    }
+  };
 
-    default:
-      return state
-  }
+  const returnState = inspection();
+  setLocalStore(returnState);
+  return returnState
+
+
 }
 export default WidgetBlocks;
 
