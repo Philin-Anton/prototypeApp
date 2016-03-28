@@ -42,6 +42,7 @@ class BodyColorComponent extends React.Component {
     const color = this.getColors()[ID];
 
     this.props.setBodyColor(ID, color);
+    this.closePopup.call(this);
   }
 
   renderPopUp(){
@@ -84,23 +85,26 @@ class BodyColorComponent extends React.Component {
       }
     });
     this.setState(nextState);
+    return false;
   }
 
   onClick(){
     this.openPopup.call(this);
+   return false;
   }
 
   render() {
     return (
-      <div className="bodycolor-component" onClick={this.onClick.bind(this)}>
+      <div className="bodycolor-component" >
 
-        <div className={'preview-bodycolor' + ' '+ 'color-' + this.props.bodyColor.id} >
+        <div onClick={this.onClick.bind(this)}>
+          <div className={'preview-bodycolor' + ' '+ 'color-' + this.props.bodyColor.id} >
 
+          </div>
+          <span>
+            Check Body Color
+          </span>
         </div>
-        <span>
-          Check Body Color
-        </span>
-
 
         {this.state.openPopUp? this.renderPopUp.call(this) : null}
 
