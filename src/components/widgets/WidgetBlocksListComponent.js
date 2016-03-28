@@ -33,9 +33,9 @@ class WidgetBlocksListComponent extends React.Component {
       border: '1px dashed gray',
       padding: '0.5rem 1rem',
       marginBottom: '.5rem',
-      backgroundColor: 'white',
+      backgroundColor: 'inherit',
       cursor: 'move',
-      color: '#000',
+      color: 'inherit',
       opacity: isDragging ? 0 : 1
     };
     return connectDragSource(connectDropTarget(

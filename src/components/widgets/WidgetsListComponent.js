@@ -4,7 +4,8 @@ import React from 'react';
 import update from 'react/lib/update';
 import { DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
-
+import { connect } from 'react-redux'
+import { createSelector } from 'reselect'
 
 import WidgetBlocksList from './WidgetBlocksListComponent';
 
@@ -113,7 +114,7 @@ class WidgetsListComponent extends React.Component {
   render() {
     const { widgetsByIndex } = this.state;
     return (
-      <div className="widgetslist-component">
+      <div className={'widgetslist-component ' + 'color-'+this.props.bodyColor.id }>
         {
           widgetsByIndex.map(widget => (
             <WidgetBlocksList
@@ -137,4 +138,10 @@ WidgetsListComponent.displayName = 'WidgetsWidgetsListComponent';
 // WidgetsListComponent.propTypes = {};
 // WidgetsListComponent.defaultProps = {};
 
-export default DragDropContext(HTML5Backend)(WidgetsListComponent);
+const getAllState = state => state.WidgetBlocks;
+
+const select = createSelector([getAllState], state => {
+  return state;
+});
+
+export default connect(select, {/*deleteToTag, getAllTags, addToTag*/})(DragDropContext(HTML5Backend)(WidgetsListComponent));
