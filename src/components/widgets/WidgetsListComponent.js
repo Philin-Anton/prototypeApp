@@ -7,7 +7,7 @@ import HTML5Backend from 'react-dnd-html5-backend';
 import { connect } from 'react-redux'
 import { createSelector } from 'reselect'
 
-//import {drawFrame} from '../../api/maggo';
+import {drawFrame} from '../../api/maggo';
 
 import WidgetBlock from './WidgetBlockComponent';
 import { actionWidgetList } from '../../actions/index';
@@ -20,6 +20,12 @@ require('styles/widgets/WidgetsList.scss');
 class WidgetsListComponent extends React.Component {
   constructor(props, context) {
     super(props, context);
+    this.state = {
+      widgetsCheck: {
+        id : false
+      }
+    };
+    this.drawFrame = drawFrame(this.state);
   }
 
   widgetsListMove(id, afterId) {
@@ -71,6 +77,16 @@ class WidgetsListComponent extends React.Component {
     this.props.addWidgetBlock(widgetsById, newWidgets);
 
   }
+  widgetsCheck(id){
+    const nextState = this.drawFrame({
+      widgetsCheck:{
+        $set: {
+          id: id
+        }
+      }
+    });
+    this.setState(nextState)
+  }
 
   render() {
     const {widgetsByIndex } = this.props;
@@ -84,6 +100,8 @@ class WidgetsListComponent extends React.Component {
               key={'key-'+widget.id}
               id={widget.id}
               widgetsListMove={this.widgetsListMove.bind(this)}
+              widgetsCheck={this.widgetsCheck.bind(this)}
+              getWidgetsCheck = {this.state.widgetsCheck}
               />
           ))
         }

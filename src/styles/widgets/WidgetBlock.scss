@@ -1,3 +1,17 @@
 .widgetblock-component {
-  border: 1px dashed #f00;
+  border: 1px dashed gray;
+  padding: 0.5rem 1rem;
+  margin-bottom: .5rem;
+  background-color: inherit;
+  cursor: move;
+  color: inherit;
+  opacity: 0;
+  min-height: 50px;
+  &.isDragging {
+    opacity: 1
+  }
+  &:hover, &.check{
+    background: rgba(200, 200, 200, .5);
+  }
+
 }

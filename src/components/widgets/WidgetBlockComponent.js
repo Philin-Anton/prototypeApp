@@ -5,7 +5,9 @@ import { DragSource, DropTarget } from 'react-dnd';
 
 import WidgetTypes from './CardTypesComponent';
 
-require('styles/widgets/WidgetBlocksList.scss');
+import { drawFrame,  classNames } from '../../api/maggo';
+
+require('styles/widgets/WidgetBlock.scss');
 
 const widgetSource = {
   beginDrag(props) {
@@ -24,21 +26,29 @@ const widgetTarget = {
 };
 
 class WidgetBlocksListComponent extends React.Component {
+  constructor(props, context) {
+    super(props, context);
+
+    this.state = {};
+    this.drawFrame = drawFrame(this.state);
+  }
+
+  onClick(){
+    const {widgetsCheck, id} = this.props;
+    widgetsCheck(id);
+  }
 
 
   render() {
-    const {id, isDragging, connectDragSource, connectDropTarget } = this.props;
-    const style = {
-      border: '1px dashed gray',
-      padding: '0.5rem 1rem',
-      marginBottom: '.5rem',
-      backgroundColor: 'inherit',
-      cursor: 'move',
-      color: 'inherit',
-      opacity: isDragging ? 0 : 1
-    };
+    const {id, isDragging, connectDragSource, connectDropTarget , getWidgetsCheck} = this.props;
+    const className = classNames({
+      'widgetblock-component':true,
+      'isDragging': isDragging ? 0 : 1,
+      'check': getWidgetsCheck.id === id
+    });
     return connectDragSource(connectDropTarget(
-      <div style={style}>
+      <div className={className} onClick={this.onClick.bind(this)}>
+
         { id }
       </div>
     ));
@@ -54,7 +64,9 @@ WidgetBlocksListComponent.propTypes = {
   connectDropTarget: React.PropTypes.func.isRequired,
   isDragging: React.PropTypes.bool.isRequired,
   id: React.PropTypes.any.isRequired,
-  widgetsListMove: React.PropTypes.func.isRequired
+  widgetsListMove: React.PropTypes.func.isRequired,
+  widgetsCheck: React.PropTypes.func.isRequired,
+  getWidgetsCheck: React.PropTypes.object.isRequired
 };
 // WidgetBlocksListComponent.defaultProps = {};
 
