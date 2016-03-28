@@ -12,5 +12,6 @@ export const DELETE_TAG = 'DELETE_TAG';
 
 export const CHANGE_FOR_SALES = 'CHANGE_FOR_SALES';
 
-
 export const SET_TITLE = 'SET_TITLE';
+
+export const SET_BODY_COLOR = 'SET_BODY_COLOR';

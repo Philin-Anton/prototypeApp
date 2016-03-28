@@ -4,7 +4,7 @@
 
 import * as types from '../constants/ActionTypes';
 import {drawFrame} from '../api/maggo';
-import {tagController, forSalesController, titleController } from './controllers/index';
+import {tagController, forSalesController, titleController, bodyColorController } from './controllers/index';
 
 
 const InitState = {
@@ -12,6 +12,10 @@ const InitState = {
   widgetsByIndex:[],
   title: '',
   tags:[],
+  bodyColor: {
+    id: 0,
+    value: '#e10c0c'
+  },
   forSales: false
 };
 
@@ -21,6 +25,7 @@ function WidgetBlocks(state = InitState, action){
   const _tagController = tagController(state, action, _drawFrame);
   const _forSalesController = forSalesController(state, action, _drawFrame);
   const _titleController = titleController(state, action, _drawFrame);
+  const _bodyColorController = bodyColorController(state, action, _drawFrame);
 
 
   switch (action.type) {
@@ -68,6 +73,9 @@ function WidgetBlocks(state = InitState, action){
 
     case types.SET_TITLE:
       return _titleController.setTitle();
+
+    case types.SET_BODY_COLOR:
+      return _bodyColorController.setBodyColor();
 
     default:
       return state

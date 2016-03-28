@@ -2,6 +2,8 @@
  * @author Anton.Filin
  */
 import update from 'react/lib/update';
+import classnames from 'classnames';
+
 
 export const drawFrame = (state) => {
 
@@ -10,7 +12,10 @@ export const drawFrame = (state) => {
     window.console.log(nextState);
     return nextState;
   }
+};
 
+export const classNames = (classes) => {
+  return classnames(classes);
 };
 
 export const throttle = (func, ms) => {
