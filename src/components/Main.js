@@ -37,12 +37,6 @@ class AppComponent extends React.Component {
 
   render() {
 
-    store.dispatch({
-      type: 'ADD_WIDGET_BLOCKS'
-    });
-
-    window.console.log(store.getState(), 'reducer');
-
     return(
       <Provider store={store}>
         <Router history={appHistory}>

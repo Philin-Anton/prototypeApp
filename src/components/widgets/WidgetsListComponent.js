@@ -1,36 +1,31 @@
 'use strict';
 
 import React from 'react';
-import update from 'react/lib/update';
+//import update from 'react/lib/update';
 import { DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import { connect } from 'react-redux'
 import { createSelector } from 'reselect'
 
+//import {drawFrame} from '../../api/maggo';
+
 import WidgetBlocksList from './WidgetBlocksListComponent';
+import { actionWidgetList } from '../../actions/index';
+const addWidgetBlock = actionWidgetList.addWidgetBlock;
+const deleteWidgetBlock = actionWidgetList.deleteWidgetBlock;
+const reorderWidgetBlock = actionWidgetList.reorderWidgetBlock;
 
 require('styles/widgets/WidgetsList.scss');
 
 class WidgetsListComponent extends React.Component {
   constructor(props, context) {
     super(props, context);
-
-    this.addWidget = this.addWidget.bind(this);
-    this.drawFrame = this.drawFrame.bind(this);
-    this.widgetsListMove = this.widgetsListMove.bind(this);
-
-    const widgetsById = {};
-    const widgetsByIndex = [];
-    this.state = JSON.parse(localStorage.getItem('bfMaggo')) || {
-        widgetsById,
-        widgetsByIndex
-      };
   }
 
   widgetsListMove(id, afterId) {
 
-    const widgetsById = this.state.widgetsById;
-    const widgetsByIndex = this.state.widgetsByIndex;
+    const widgetsById = this.props.widgetsById;
+    const widgetsByIndex = this.props.widgetsByIndex;
 
     const widget = widgetsById[id];
     const afterWidget = widgetsById[afterId];
@@ -56,41 +51,16 @@ class WidgetsListComponent extends React.Component {
     }
     index = null;
 
-    this.scheduleUpdate({
-      widgetsByIndex: {
-        $splice: [
-          [widgetIndex, 1],
-          [afterIndex, 0, widget]
-        ]
-      }
-    });
+    this.props.reorderWidgetBlock(widgetIndex, afterIndex, widget );
+
   }
   componentWillUnmount() {
     cancelAnimationFrame(this.requestedFrame);
   }
-  scheduleUpdate(updateFn) {
-    this.pendingUpdateFn = updateFn;
-
-    if (!this.requestedFrame) {
-      this.requestedFrame = requestAnimationFrame(this.drawFrame);
-    }
-  }
-
-  drawFrame() {
-    const nextState = update(this.state, this.pendingUpdateFn);
-
-    this.setState(nextState);
-
-    localStorage.clear();
-    localStorage.setItem('bfMaggo', JSON.stringify(this.state));
-
-    this.pendingUpdateFn = null;
-    this.requestedFrame = null;
-}
 
   addWidget() {
 
-    const {widgetsById/*, widgetsByIndex*/} = this.state;
+    const {widgetsById/*, widgetsByIndex*/} = this.props;
 
     const newWidgets = {
       id: Object.keys(widgetsById).length
@@ -98,21 +68,26 @@ class WidgetsListComponent extends React.Component {
 
     widgetsById[newWidgets.id] = newWidgets;
 
-    this.scheduleUpdate({
-      widgetsById: {
-        $set: widgetsById
-      },
-      widgetsByIndex: {
-        $push: [
-          newWidgets
-        ]
-      }
-    });
+
+    this.props.addWidgetBlock(widgetsById, newWidgets);
+
+    //this.scheduleUpdate({
+    //  widgetsById: {
+    //    $set: widgetsById
+    //  },
+    //  widgetsByIndex: {
+    //    $push: [
+    //      newWidgets
+    //    ]
+    //  }
+    //});
 
   }
 
   render() {
-    const { widgetsByIndex } = this.state;
+    const {widgetsByIndex } = this.props;
+
+    window.console.log(this.props);
     return (
       <div className={'widgetslist-component ' }>
         {
@@ -120,11 +95,11 @@ class WidgetsListComponent extends React.Component {
             <WidgetBlocksList
               key={'key-'+widget.id}
               id={widget.id}
-              widgetsListMove={this.widgetsListMove}
+              widgetsListMove={this.widgetsListMove.bind(this)}
               />
           ))
         }
-        <div onClick={this.addWidget}>
+        <div onClick={this.addWidget.bind(this)}>
           Add Widget
         </div>
       </div>
@@ -144,4 +119,4 @@ const select = createSelector([getAllState], state => {
   return state;
 });
 
-export default connect(select, {/*deleteToTag, getAllTags, addToTag*/})(DragDropContext(HTML5Backend)(WidgetsListComponent));
+export default connect(select, {/*, getAllTags, addWidgetBlock*/addWidgetBlock, reorderWidgetBlock, deleteWidgetBlock})(DragDropContext(HTML5Backend)(WidgetsListComponent));

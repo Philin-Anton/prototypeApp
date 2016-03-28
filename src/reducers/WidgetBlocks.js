@@ -4,7 +4,7 @@
 
 import * as types from '../constants/ActionTypes';
 import {drawFrame} from '../api/maggo';
-import {tagController, forSalesController, titleController, bodyColorController } from './controllers/index';
+import {tagController, forSalesController, titleController, bodyColorController, listBlockController } from './controllers/index';
 
 
 const InitState = {
@@ -26,35 +26,21 @@ function WidgetBlocks(state = InitState, action){
   const _forSalesController = forSalesController(state, action, _drawFrame);
   const _titleController = titleController(state, action, _drawFrame);
   const _bodyColorController = bodyColorController(state, action, _drawFrame);
+  const _listBlockController = listBlockController(state, action, _drawFrame);
 
 
   switch (action.type) {
     case types.REORDER_WIDGET_BLOCKS:
 
-      return action;
+      return _listBlockController.reorderBlocks();
 
     case types.ADD_WIDGET_BLOCKS:
 
-      const newWidgets = {
-        id: Object.keys(state.widgetsById).length
-      };
-      const ID = newWidgets.id;
-
-      state.widgetsById[ID] = newWidgets;
-
-      return _drawFrame({
-        widgetsById: {
-          $set: state.widgetsById
-        },
-        widgetsByIndex: {
-          $push: [
-            newWidgets
-          ]
-        }
-      });
+      return _listBlockController.addBlocks();
 
     case types.REMOVE_WIDGET_BLOCKS:
-      return action;
+
+      return _listBlockController.deleteBlocks();
 
     case types.GET_TAGS:
 

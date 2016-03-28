@@ -8,6 +8,7 @@ import * as ActionWidgetBlock from './ActionWidgetBlock';
 import * as ActionWidgetNavBar from './ActionWidgetNavBar';
 import * as ActionWidgetForSales from './ActionWidgetForSales';
 import * as ActionWidgetBodyColor from './ActionWidgetBodyColor';
+import * as ActionWidgetList from './actionWidgetList';
 
 export const actionWidgetTag = ( () => {
   return ActionWidgetTag;
@@ -15,6 +16,9 @@ export const actionWidgetTag = ( () => {
 
 export const actionWidgetTitle = ( () => {
   return ActionWidgetTitle;
+})();
+export const actionWidgetList = ( () => {
+  return ActionWidgetList;
 })();
 export const actionWidgetBlock = ( () => {
   return ActionWidgetBlock;
