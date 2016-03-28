@@ -9,7 +9,7 @@ import { createSelector } from 'reselect'
 
 //import {drawFrame} from '../../api/maggo';
 
-import WidgetBlocksList from './WidgetBlocksListComponent';
+import WidgetBlock from './WidgetBlockComponent';
 import { actionWidgetList } from '../../actions/index';
 const addWidgetBlock = actionWidgetList.addWidgetBlock;
 const deleteWidgetBlock = actionWidgetList.deleteWidgetBlock;
@@ -68,19 +68,7 @@ class WidgetsListComponent extends React.Component {
 
     widgetsById[newWidgets.id] = newWidgets;
 
-
     this.props.addWidgetBlock(widgetsById, newWidgets);
-
-    //this.scheduleUpdate({
-    //  widgetsById: {
-    //    $set: widgetsById
-    //  },
-    //  widgetsByIndex: {
-    //    $push: [
-    //      newWidgets
-    //    ]
-    //  }
-    //});
 
   }
 
@@ -92,7 +80,7 @@ class WidgetsListComponent extends React.Component {
       <div className={'widgetslist-component ' }>
         {
           widgetsByIndex.map(widget => (
-            <WidgetBlocksList
+            <WidgetBlock
               key={'key-'+widget.id}
               id={widget.id}
               widgetsListMove={this.widgetsListMove.bind(this)}
@@ -119,4 +107,4 @@ const select = createSelector([getAllState], state => {
   return state;
 });
 
-export default connect(select, {/*, getAllTags, addWidgetBlock*/addWidgetBlock, reorderWidgetBlock, deleteWidgetBlock})(DragDropContext(HTML5Backend)(WidgetsListComponent));
+export default connect(select, {addWidgetBlock, reorderWidgetBlock, deleteWidgetBlock})(DragDropContext(HTML5Backend)(WidgetsListComponent));

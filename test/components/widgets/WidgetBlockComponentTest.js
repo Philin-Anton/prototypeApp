@@ -7,16 +7,16 @@
 // import TestUtils from 'react-addons-test-utils';
 import createComponent from 'helpers/shallowRenderHelper';
 
-import WidgetBlocksListComponent from 'components/widgets/WidgetBlocksListComponent.js';
+import WidgetBlockComponent from 'components/widgets/WidgetBlockComponent.js';
 
-describe('WidgetBlocksListComponent', () => {
+describe('WidgetBlockComponent', () => {
   let component;
 
   beforeEach(() => {
-    component = createComponent(WidgetBlocksListComponent);
+    component = createComponent(WidgetBlockComponent);
   });
 
   it('should have its component name as default className', () => {
-    expect(component.props.className).to.equal('widgetblockslist-component');
+    expect(component.props.className).to.equal('widgetblock-component');
   });
 });

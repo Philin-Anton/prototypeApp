@@ -9,7 +9,6 @@ require('styles/widgets/WidgetBlocksList.scss');
 
 const widgetSource = {
   beginDrag(props) {
-
     return { id: props.id };
   }
 };

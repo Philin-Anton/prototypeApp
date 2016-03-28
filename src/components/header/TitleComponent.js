@@ -3,7 +3,6 @@
 import React from 'react';
 import { connect } from 'react-redux'
 import { createSelector } from 'reselect'
-import { throttle } from '../../api/maggo'
 
 import { actionWidgetTitle} from '../../actions/index';
 const setTitle =  actionWidgetTitle.setTitle;

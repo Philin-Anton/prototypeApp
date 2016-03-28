@@ -14,6 +14,7 @@ class ItemForSalesComponent extends React.Component {
 
   onChange(){
     this.props.changeForSales();
+    //WidgetBlock
   }
 
   render() {
