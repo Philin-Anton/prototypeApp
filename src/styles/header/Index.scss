@@ -1,7 +1,6 @@
 .index-component {
-  border: 1px dashed #f00;
-  color: #000;
-
+  color: inherit;
+  margin-bottom: 10px;
   .topPlace {
     background: #000;
     img {
@@ -11,6 +10,6 @@
   }
   .header-control{
     display: flex;
-
   }
+
 }

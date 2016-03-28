@@ -1,7 +1,8 @@
 'use strict';
 
 import React from 'react';
-
+import { connect } from 'react-redux'
+import { createSelector } from 'reselect'
 
 import Header from './header/IndexComponent';
 import WidgetsList from './widgets/WidgetsListComponent.js';
@@ -11,7 +12,7 @@ require('styles//HomeContainer.scss');
 class HomeContainerComponent extends React.Component {
   render() {
     return (
-      <div className="homecontainer-component">
+      <div className={'homecontainer-component ' + 'color-'+this.props.bodyColor.id} >
         <Header/>
         <WidgetsList />
       </div>
@@ -25,4 +26,10 @@ HomeContainerComponent.displayName = 'HomeContainerComponent';
 // HomeContainerComponent.propTypes = {};
 // HomeContainerComponent.defaultProps = {};
 
-export default HomeContainerComponent;
+const getAllState = state => state.WidgetBlocks;
+
+const select = createSelector([getAllState], state => {
+  return state;
+});
+
+export default connect(select)(HomeContainerComponent);

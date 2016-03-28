@@ -114,7 +114,7 @@ class WidgetsListComponent extends React.Component {
   render() {
     const { widgetsByIndex } = this.state;
     return (
-      <div className={'widgetslist-component ' + 'color-'+this.props.bodyColor.id }>
+      <div className={'widgetslist-component ' }>
         {
           widgetsByIndex.map(widget => (
             <WidgetBlocksList

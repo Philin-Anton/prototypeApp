@@ -1,9 +1,20 @@
 .title-component {
-  border: 1px dashed #f00;
   input{
     width: 100%;
     padding: 10px;
     text-align: center;
     font-size: 20px;
+    background: inherit;
+    border: 1px solid #fff;
+    box-shadow: 0 0 2px #000;
+    &::-webkit-input-placeholder{
+      color: inherit;
+    }
+    &:-ms-input-placeholder{
+      color: inherit;
+    }
+    &:-moz-placeholder{
+      color: inherit;
+    }
   }
 }
