@@ -4,7 +4,7 @@
 
 import * as types from '../constants/ActionTypes';
 import {drawFrame, getLocalStore, setLocalStore} from '../api/maggo';
-import {tagController, forSalesController, titleController, bodyColorController, listBlockController } from './controllers/index';
+import {tagController, forSalesController, titleController, bodyColorController, listBlockController, blockController } from './controllers/index';
 
 
 const InitState = getLocalStore() || {
@@ -27,31 +27,26 @@ function WidgetBlocks(state = InitState, action){
   const _titleController = titleController(state, action, _drawFrame);
   const _bodyColorController = bodyColorController(state, action, _drawFrame);
   const _listBlockController = listBlockController(state, action, _drawFrame);
+  const _blockController = blockController(state, action, _drawFrame);
 
   const inspection = function(){
     switch (action.type) {
       case types.REORDER_WIDGET_BLOCKS:
-
         return _listBlockController.reorderBlocks();
 
       case types.ADD_WIDGET_BLOCKS:
-
         return _listBlockController.addBlocks();
 
       case types.REMOVE_WIDGET_BLOCKS:
-
         return _listBlockController.deleteBlocks();
 
       case types.GET_TAGS:
-
         return _tagController.getTags();
 
       case types.ADD_TAG:
-
         return _tagController.addTag();
 
       case types.DELETE_TAG:
-
         return _tagController.deleteTag();
 
       case types.CHANGE_FOR_SALES:
@@ -63,8 +58,11 @@ function WidgetBlocks(state = InitState, action){
       case types.SET_BODY_COLOR:
         return _bodyColorController.setBodyColor();
 
+      case types.CREATE_EDITORS:
+        return _blockController.createEditors();
+
       default:
-        return state
+        return state;
     }
   };
 

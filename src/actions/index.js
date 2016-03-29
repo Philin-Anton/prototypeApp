@@ -17,9 +17,11 @@ export const actionWidgetTag = ( () => {
 export const actionWidgetTitle = ( () => {
   return ActionWidgetTitle;
 })();
+
 export const actionWidgetList = ( () => {
   return ActionWidgetList;
 })();
+
 export const actionWidgetBlock = ( () => {
   return ActionWidgetBlock;
 })();
@@ -29,6 +31,7 @@ export const actionWidgetNavBar = ( () => {
 export const actionWidgetForSales = ( () => {
   return ActionWidgetForSales;
 })();
+
 export const actionWidgetBodyColor = ( () => {
   return ActionWidgetBodyColor;
 })();

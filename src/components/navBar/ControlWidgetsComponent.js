@@ -7,6 +7,9 @@ import { createSelector } from 'reselect'
 
 import Icon from '../glyphicon/IndexComponent';
 
+import { actionWidgetBlock } from '../../actions/index';
+const createEditors =  actionWidgetBlock.createEditors;
+
 //import { CreateTextBlock } from './CreateTextBlockComponent'
 
 
@@ -16,12 +19,15 @@ class ControlWidgetsComponent extends React.Component {
 
   TextCreate(event){
     event.stopPropagation();
-    const {id, widgetsByIndex} = this.props;
+    const {id, widgetsByIndex, createEditors} = this.props;
     const elem = widgetsByIndex.filter((item) => {
       return item.id == id;
     })[0];
+    const index = widgetsByIndex.findIndex(item => {
+      return JSON.stringify(item) == JSON.stringify(elem);
+    });
 
-
+    createEditors(index);
 
     window.console.log(elem.id);
 
@@ -50,4 +56,4 @@ const select = createSelector([getAllState], state => {
   return state;
 });
 
-export default connect(select)(ControlWidgetsComponent);
+export default connect(select, {createEditors})(ControlWidgetsComponent);

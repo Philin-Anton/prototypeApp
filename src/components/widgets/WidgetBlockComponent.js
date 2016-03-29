@@ -7,6 +7,8 @@ import WidgetTypes from './CardTypesComponent';
 
 import NavBar from '../navBar/ControlWidgetsComponent';
 
+import RichEditor from '../editor/RichEditorComponent';
+
 import { drawFrame,  classNames } from '../../api/maggo';
 
 require('styles/widgets/WidgetBlock.scss');
@@ -43,18 +45,23 @@ class WidgetBlocksListComponent extends React.Component {
 
 
   render() {
-    const {id, isDragging, connectDragSource, connectDropTarget , getWidgetsCheck} = this.props;
+    const {id, isDragging, connectDragSource, connectDropTarget , getWidgetsCheck, getWidgetElem} = this.props;
     const itsRight = getWidgetsCheck.id === id;
     const className = classNames({
       'widgetblock-component':true,
       'isDragging': isDragging ? 0 : 1,
       'check': itsRight
     });
+    window.console.log(getWidgetElem);
+
     return connectDragSource(connectDropTarget(
       <div className={className} onClick={this.onClick.bind(this)}>
         { itsRight ? <NavBar id={id}/> : null }
 
         { id }
+        {
+          getWidgetElem.edit ? getWidgetElem.edit.map((item) => <RichEditor key={item.id} /> ) : null
+        }
       </div>
     ));
   }
@@ -71,7 +78,8 @@ WidgetBlocksListComponent.propTypes = {
   id: React.PropTypes.any.isRequired,
   widgetsListMove: React.PropTypes.func.isRequired,
   widgetsCheck: React.PropTypes.func.isRequired,
-  getWidgetsCheck: React.PropTypes.object.isRequired
+  getWidgetsCheck: React.PropTypes.object.isRequired,
+  getWidgetElem: React.PropTypes.object.isRequired
 };
 // WidgetBlocksListComponent.defaultProps = {};
 

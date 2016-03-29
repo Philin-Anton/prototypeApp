@@ -102,6 +102,7 @@ class WidgetsListComponent extends React.Component {
               widgetsListMove={this.widgetsListMove.bind(this)}
               widgetsCheck={this.widgetsCheck.bind(this)}
               getWidgetsCheck = {this.state.widgetsCheck}
+              getWidgetElem = {widget}
               />
           ))
         }

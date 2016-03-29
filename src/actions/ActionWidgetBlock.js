@@ -3,16 +3,18 @@
  */
 'use strict';
 
-export const ADD_TAG = (text) => {
+
+import * as types from '../constants/ActionTypes';
+
+const createEditorsUnsafe = (index)=> {
   return {
-    type: 'ADD_TAG',
-    name: text
+    type: types.CREATE_EDITORS,
+    index
   }
 };
 
-export const DELETE_TAG = (id) => {
-  return {
-    type: 'DELETE_TAG',
-    id: id
+export const createEditors = (index) => {
+  return (dispatch)=> {
+    dispatch(createEditorsUnsafe(index));
   }
 };
