@@ -1,24 +1,100 @@
 'use strict';
 
 import React from 'react';
-import Draft from 'draft-js';
+import {
+  Editor,
+  EditorState,
+  ContentState,
+  Entity,
+  RichUtils,
+  convertToRaw,
+  CompositeDecorator,
+  Modifier
+} from 'draft-js';
+import debounce from 'lodash/debounce';
+
+import htmlToContent from './utils/htmlToContent';
+import draftRawToHtml from './utils/draftRawToHtml';
+
+import Link from './controls/Link';
+import EntityControls from './controls/EntityControls';
+import InlineStyleControls from './controls/InlineStyleControls';
+import BlockStyleControls from './controls/BlockStyleControls';
+import findEntities from './utils/findEntities';
 
 require('styles/editor/RichEditor.scss');
-
-const {Editor, EditorState, RichUtils, Entity} = Draft;
 
 class RichEditorComponent extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {editorState: EditorState.createEmpty()};
+    let { value } = props;
+
+    const decorator = new CompositeDecorator([
+      {
+        strategy: findEntities.bind(null, 'link'),
+        component: Link
+      }
+    ]);
+
+    this.ENTITY_CONTROLS = [
+      {label: 'Add Link', action: this._addLink.bind(this) },
+      {label: 'Remove Link', action: this._removeLink.bind(this) }
+    ];
+
+    this.INLINE_STYLES = [
+      {label: 'Bold', style: 'BOLD'},
+      {label: 'Italic', style: 'ITALIC'},
+      {label: 'Underline', style: 'UNDERLINE'},
+      {label: 'Monospace', style: 'CODE'},
+      {label: 'Strikethrough', style: 'STRIKETHROUGH'}
+    ];
+
+    this.BLOCK_TYPES = [
+      {label: 'P', style: 'unstyled'},
+      {label: 'H1', style: 'header-one'},
+      {label: 'H2', style: 'header-two'},
+      {label: 'Blockquote', style: 'blockquote'},
+      {label: 'UL', style: 'unordered-list-item'},
+      {label: 'OL', style: 'ordered-list-item'},
+      {label: 'Code Block', style: 'code-block'}
+    ];
+
+    this.state = {
+      editorState: value ?
+        EditorState.createWithContent(
+          ContentState.createFromBlockArray(htmlToContent(value)),
+          decorator
+        ) :
+        EditorState.createEmpty(decorator)
+    };
 
     this.focus = () => this.refs.editor.focus();
-    this.onChange = (editorState) => this.setState({editorState});
+
+    this.onChange = (editorState) => {
+      let previousContent = this.state.editorState.getCurrentContent();
+      this.setState({editorState});
+
+      // only emit html when content changes
+      if( previousContent !== editorState.getCurrentContent() ) {
+        this.emitHTML(editorState);
+      }
+    };
+
+    function emitHTML(editorState) {
+      let raw = convertToRaw( editorState.getCurrentContent() );
+      let html = draftRawToHtml(raw);
+      this.props.onChange(html);
+    }
+    this.emitHTML = debounce(emitHTML, this.props.debounce);
 
     this.handleKeyCommand = (command) => this._handleKeyCommand(command);
     this.toggleBlockType = (type) => this._toggleBlockType(type);
     this.toggleInlineStyle = (style) => this._toggleInlineStyle(style);
+    this.handleReturn = (e) => this._handleReturn(e);
+    this.addLink = this._addLink.bind(this);
+    this.removeLink = this._removeLink.bind(this);
   }
+
   _handleKeyCommand(command) {
     const {editorState} = this.state;
     const newState = RichUtils.handleKeyCommand(editorState, command);
@@ -49,6 +125,52 @@ class RichEditorComponent extends React.Component {
       )
     );
   }
+  _handleReturn(e) {
+    if (e.metaKey === true) {
+      return this._addLineBreak();
+    } else {
+      return false;
+    }
+  }
+
+  _addLineBreak(/* e */) {
+    let newContent, newEditorState/*, newSelection*/;
+    const {editorState} = this.state;
+    const content = editorState.getCurrentContent();
+    const selection = editorState.getSelection();
+    const block = content.getBlockForKey(selection.getStartKey());
+
+    window.console.log(content.toJS(), selection.toJS(), block.toJS());
+
+    if (block.type === 'code-block') {
+      newContent = Modifier.insertText(content, selection, '\n');
+      newEditorState = EditorState.push(editorState, newContent, 'add-new-line');
+      this.onChange(newEditorState);
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  _addLink(/* e */) {
+    const {editorState} = this.state;
+    const selection = editorState.getSelection();
+    if (selection.isCollapsed()) {
+      return;
+    }
+    const href = window.prompt('Enter a URL');
+    const entityKey = Entity.create('link', 'MUTABLE', {href});
+    this.onChange(RichUtils.toggleLink(editorState, selection, entityKey));
+  }
+
+  _removeLink(/* e */) {
+    const {editorState} = this.state;
+    const selection = editorState.getSelection();
+    if (selection.isCollapsed()) {
+      return;
+    }
+    this.onChange( RichUtils.toggleLink(editorState, selection, null));
+  }
 
   render() {
     const {editorState} = this.state;
@@ -65,24 +187,29 @@ class RichEditorComponent extends React.Component {
 
     return (
       <div className="RichEditor-root">
-
         <BlockStyleControls
           editorState={editorState}
+          blockTypes={this.BLOCK_TYPES}
           onToggle={this.toggleBlockType}
           />
         <InlineStyleControls
           editorState={editorState}
           onToggle={this.toggleInlineStyle}
+          inlineStyles={this.INLINE_STYLES}
+          />
+        <EntityControls
+          editorState={editorState}
+          entityControls={this.ENTITY_CONTROLS}
           />
         <div className={className} onClick={this.focus}>
           <Editor
             blockStyleFn={getBlockStyle}
-            blockRendererFn={customBlockRenderer}
             customStyleMap={styleMap}
             editorState={editorState}
             handleKeyCommand={this.handleKeyCommand}
+            handleReturn={this.handleReturn}
             onChange={this.onChange}
-            placeholder="Enter ..."
+            placeholder="Tell a story..."
             ref="editor"
             spellCheck={true}
             />
@@ -101,118 +228,12 @@ const styleMap = {
   }
 };
 
-function customBlockRenderer(contentBlock) {
-  const type = contentBlock.getType();
-  if (type === 'paragraph') {
-    return {
-      component: ParagraphComponent,
-      props: {
-        foo: 'bar'
-      }
-    };
-  }
-}
-
-class ParagraphComponent extends React.Component {
-  render() {
-    const {block/*, foo*/} = this.props;
-    const data = Entity.get(block.getEntityAt(0)).getData();
-    window.console.log(data, 'data');
-
-    // Return a <figure> or some other content using this data.
-  }
-}
-
 function getBlockStyle(block) {
   switch (block.getType()) {
     case 'blockquote': return 'RichEditor-blockquote';
     default: return null;
   }
 }
-
-class StyleButton extends React.Component {
-  constructor(props, context) {
-    super(props, context);
-    this.onToggle = (e) => {
-      e.preventDefault();
-      this.props.onToggle(this.props.style);
-    };
-  }
-
-  render() {
-    let className = 'RichEditor-styleButton';
-    if (this.props.active) {
-      className += ' RichEditor-activeButton';
-    }
-
-    return (
-      <span className={className} onMouseDown={this.onToggle}>
-              {this.props.label}
-            </span>
-    );
-  }
-}
-
-const BLOCK_TYPES = [
-  {label: 'P', style: 'paragraph'},
-  {label: 'H1', style: 'header-one'},
-  {label: 'H2', style: 'header-two'},
-  {label: 'H3', style: 'header-three'},
-  {label: 'H4', style: 'header-four'},
-  {label: 'H5', style: 'header-five'},
-  {label: 'H6', style: 'header-six'},
-  {label: 'Blockquote', style: 'blockquote'},
-  {label: 'UL', style: 'unordered-list-item'},
-  {label: 'OL', style: 'ordered-list-item'},
-  {label: 'Code Block', style: 'code-block'}
-];
-
-const BlockStyleControls = (props) => {
-  const {editorState} = props;
-  const selection = editorState.getSelection();
-  const blockType = editorState
-    .getCurrentContent()
-    .getBlockForKey(selection.getStartKey())
-    .getType();
-
-  return (
-    <div className="RichEditor-controls">
-      {BLOCK_TYPES.map((type) =>
-          <StyleButton
-            key={type.label}
-            active={type.style === blockType}
-            label={type.label}
-            onToggle={props.onToggle}
-            style={type.style}
-            />
-      )}
-    </div>
-  );
-};
-
-var INLINE_STYLES = [
-  {label: 'Bold', style: 'BOLD'},
-  {label: 'Italic', style: 'ITALIC'},
-  {label: 'Underline', style: 'UNDERLINE'},
-  {label: 'Monospace', style: 'CODE'}
-];
-
-const InlineStyleControls = (props) => {
-  var currentStyle = props.editorState.getCurrentInlineStyle();
-  return (
-    <div className="RichEditor-controls">
-      {INLINE_STYLES.map(type =>
-          <StyleButton
-            key={type.label}
-            active={currentStyle.has(type.style)}
-            label={type.label}
-            onToggle={props.onToggle}
-            style={type.style}
-            />
-      )}
-    </div>
-  );
-};
 
 RichEditorComponent.displayName = 'EditorRichEditorComponent';
 

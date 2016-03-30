@@ -32,9 +32,17 @@ const widgetTarget = {
 class WidgetBlocksListComponent extends React.Component {
   constructor(props, context) {
     super(props, context);
-
-    this.state = {};
     this.drawFrame = drawFrame(this.state);
+
+    this.state = {
+      html: ''
+    };
+  }
+
+  updateHtml(html) {
+    this.setState({
+      html
+    });
   }
 
   onClick(event){
@@ -60,8 +68,9 @@ class WidgetBlocksListComponent extends React.Component {
 
         { id }
         {
-          getWidgetElem.edit ? getWidgetElem.edit.map((item) => <RichEditor key={item.id} /> ) : null
+          getWidgetElem.edit ? getWidgetElem.edit.map((item) => <RichEditor  onChange={ (html) => this.updateHtml(html) }  debounce={ 500 } key={item.id} /> ) : null
         }
+        <div dangerouslySetInnerHTML={{ __html: this.state.html }} />
       </div>
     ));
   }
