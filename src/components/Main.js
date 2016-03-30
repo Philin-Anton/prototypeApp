@@ -1,4 +1,4 @@
-require('normalize.css');
+//equire('normalize.css');
 require('styles/App.css');
 import React from 'react';
 import { Router, Route, useRouterHistory } from 'react-router'
@@ -30,9 +30,7 @@ class AppComponent extends React.Component {
     if(typeof callBack === 'function'){
       return callBack.call(this);
     }
-
     return true;
-
   }
 
   render() {

@@ -11,6 +11,7 @@ import {
   CompositeDecorator,
   Modifier
 } from 'draft-js';
+
 import debounce from 'lodash/debounce';
 
 import htmlToContent from './utils/htmlToContent';
@@ -85,6 +86,7 @@ class RichEditorComponent extends React.Component {
       let html = draftRawToHtml(raw);
       this.props.onChange(html);
     }
+
     this.emitHTML = debounce(emitHTML, this.props.debounce);
 
     this.handleKeyCommand = (command) => this._handleKeyCommand(command);
@@ -93,6 +95,13 @@ class RichEditorComponent extends React.Component {
     this.handleReturn = (e) => this._handleReturn(e);
     this.addLink = this._addLink.bind(this);
     this.removeLink = this._removeLink.bind(this);
+
+    this.logState = () => {
+      const content = this.state.editorState.getCurrentContent();
+      return(
+        window.console.log(convertToRaw(content))
+      )
+    };
   }
 
   _handleKeyCommand(command) {
@@ -213,7 +222,14 @@ class RichEditorComponent extends React.Component {
             ref="editor"
             spellCheck={true}
             />
+
         </div>
+
+        <input
+          onClick={this.logState.bind()}
+          type="button"
+          value="Log State"
+          />
       </div>
     );
   }

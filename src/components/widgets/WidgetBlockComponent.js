@@ -7,9 +7,13 @@ import WidgetTypes from './CardTypesComponent';
 
 import NavBar from '../navBar/ControlWidgetsComponent';
 
-import RichEditor from '../editor/RichEditorComponent';
+//import RichEditor from '../editor/RichEditorComponent';
 
 import { drawFrame,  classNames } from '../../api/maggo';
+
+import ReactQuill from 'react-quill';
+
+
 
 require('styles/widgets/WidgetBlock.scss');
 
@@ -39,7 +43,7 @@ class WidgetBlocksListComponent extends React.Component {
     };
   }
 
-  updateHtml(html) {
+  onTextChange(html) {
     this.setState({
       html
     });
@@ -51,25 +55,41 @@ class WidgetBlocksListComponent extends React.Component {
     if(getWidgetsCheck.id != id) widgetsCheck(id);
   }
 
+  getEditorContents(){
+    return this.state.html
+  }
+
 
   render() {
-    const {id, isDragging, connectDragSource, connectDropTarget , getWidgetsCheck, getWidgetElem} = this.props;
+    const {id, isDragging, connectDragSource, connectDropTarget , getWidgetsCheck/*, getWidgetElem*/} = this.props;
     const itsRight = getWidgetsCheck.id === id;
     const className = classNames({
       'widgetblock-component':true,
       'isDragging': isDragging ? 0 : 1,
       'check': itsRight
     });
-    window.console.log(getWidgetElem);
 
     return connectDragSource(connectDropTarget(
       <div className={className} onClick={this.onClick.bind(this)}>
         { itsRight ? <NavBar id={id}/> : null }
 
         { id }
-        {
-          getWidgetElem.edit ? getWidgetElem.edit.map((item) => <RichEditor  onChange={ (html) => this.updateHtml(html) }  debounce={ 500 } key={item.id} /> ) : null
-        }
+
+        {/*
+         <ReactQuill onChange={this.onTextChange.bind(this)} >
+
+         <ReactQuill.Toolbar
+         key="toolbar"
+         ref="toolbar"
+         items={ReactQuill.Toolbar.defaultItems} />
+
+         <div key="editor"
+         ref="editor"
+         className="quill-contents"
+         dangerouslySetInnerHTML={{__html:this.getEditorContents()}} />
+
+         </ReactQuill>*/}
+
         <div dangerouslySetInnerHTML={{ __html: this.state.html }} />
       </div>
     ));
