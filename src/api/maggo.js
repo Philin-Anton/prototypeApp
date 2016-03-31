@@ -5,17 +5,16 @@ import update from 'react/lib/update';
 import classnames from 'classnames';
 
 
-export const setLocalStore = (store) => {
+export const setLocalStore = (store, nameStore) => {
   const storeJSON = JSON.stringify(store);
-  const nameStorage = 'MagooStore';
+  const nameStorage = nameStore || 'MagooStore';
 
-  localStorage.clear(nameStorage);
   localStorage.setItem(nameStorage, storeJSON);
   return store;
 };
 
-export const getLocalStore = (ItemKey) => {
-  const nameStorage = ItemKey || 'MagooStore';
+export const getLocalStore = (nameStore) => {
+  const nameStorage = nameStore || 'MagooStore';
   const storeJSON = localStorage.getItem(nameStorage);
   return JSON.parse(storeJSON)
 };

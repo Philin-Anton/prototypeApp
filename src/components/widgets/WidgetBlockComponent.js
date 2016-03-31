@@ -7,11 +7,10 @@ import WidgetTypes from './CardTypesComponent';
 
 import NavBar from '../navBar/ControlWidgetsComponent';
 
-//import RichEditor from '../editor/RichEditorComponent';
+import RichEditor from '../editor/RichEditorComponent';
 
-import { drawFrame,  classNames } from '../../api/maggo';
+import { drawFrame,  classNames, setLocalStore, getLocalStore } from '../../api/maggo';
 
-import ReactQuill from 'react-quill';
 
 
 
@@ -36,17 +35,26 @@ const widgetTarget = {
 class WidgetBlocksListComponent extends React.Component {
   constructor(props, context) {
     super(props, context);
-    this.drawFrame = drawFrame(this.state);
 
-    this.state = {
-      html: ''
+
+    this.state = getLocalStore('editorStore') || {
+      html: '<p><br/></p>',
+      status: true
     };
+
+    this.drawFrame = drawFrame(this.state);
   }
 
-  onTextChange(html) {
-    this.setState({
-      html
+  onTextChange(event) {
+
+    const nextState = this.drawFrame({
+      html: {
+        $set: event.target.innerHTML
+      }
     });
+
+    setLocalStore(nextState,'editorStore');
+    //this.setState(nextState);
   }
 
   onClick(event){
@@ -57,6 +65,16 @@ class WidgetBlocksListComponent extends React.Component {
 
   getEditorContents(){
     return this.state.html
+  }
+
+  checkIsDragging(status){
+    window.console.log(status);
+    const nextState = this.drawFrame({
+      status:{
+        $set: status
+      }
+    });
+    this.setState(nextState);
   }
 
 
@@ -70,30 +88,27 @@ class WidgetBlocksListComponent extends React.Component {
     });
 
     return connectDragSource(connectDropTarget(
-      <div className={className} onClick={this.onClick.bind(this)}>
-        { itsRight ? <NavBar id={id}/> : null }
+      <div className={className} ref={(c) => this._connectDragSource = c} onClick={this.onClick.bind(this)}>
+        { itsRight ?
+          <NavBar id={id}/>
+          : null }
 
         { id }
 
-        {/*
-         <ReactQuill onChange={this.onTextChange.bind(this)} >
-
-         <ReactQuill.Toolbar
-         key="toolbar"
-         ref="toolbar"
-         items={ReactQuill.Toolbar.defaultItems} />
-
-         <div key="editor"
-         ref="editor"
-         className="quill-contents"
-         dangerouslySetInnerHTML={{__html:this.getEditorContents()}} />
-
-         </ReactQuill>*/}
+        <RichEditor value={this.state.html} /*checkIsDragging={this.checkIsDragging.bind(this)}*/ onTextChange={this.onTextChange.bind(this)} />
 
         <div dangerouslySetInnerHTML={{ __html: this.state.html }} />
       </div>
     ));
   }
+  //componentDidUpdate(){
+  //  if(this._connectDragSource.className.indexOf('check') != -1){
+  //    window.console.log( this.state.status);
+  //    this._connectDragSource.setAttribute('draggable', !this.state.status);
+  //  }else{
+  //    this._connectDragSource.setAttribute('draggable', true);
+  //  }
+  //}
 }
 
 WidgetBlocksListComponent.displayName = 'WidgetsWidgetBlocksListComponent';

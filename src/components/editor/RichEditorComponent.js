@@ -1,255 +1,206 @@
 'use strict';
 
 import React from 'react';
-import {
-  Editor,
-  EditorState,
-  ContentState,
-  Entity,
-  RichUtils,
-  convertToRaw,
-  CompositeDecorator,
-  Modifier
-} from 'draft-js';
-
-import debounce from 'lodash/debounce';
-
-import htmlToContent from './utils/htmlToContent';
-import draftRawToHtml from './utils/draftRawToHtml';
-
-import Link from './controls/Link';
-import EntityControls from './controls/EntityControls';
-import InlineStyleControls from './controls/InlineStyleControls';
-import BlockStyleControls from './controls/BlockStyleControls';
-import findEntities from './utils/findEntities';
+import ReactDOM from 'react-dom';
 
 require('styles/editor/RichEditor.scss');
 
 class RichEditorComponent extends React.Component {
   constructor(props) {
     super(props);
-    let { value } = props;
-
-    const decorator = new CompositeDecorator([
-      {
-        strategy: findEntities.bind(null, 'link'),
-        component: Link
-      }
-    ]);
-
-    this.ENTITY_CONTROLS = [
-      {label: 'Add Link', action: this._addLink.bind(this) },
-      {label: 'Remove Link', action: this._removeLink.bind(this) }
-    ];
-
-    this.INLINE_STYLES = [
-      {label: 'Bold', style: 'BOLD'},
-      {label: 'Italic', style: 'ITALIC'},
-      {label: 'Underline', style: 'UNDERLINE'},
-      {label: 'Monospace', style: 'CODE'},
-      {label: 'Strikethrough', style: 'STRIKETHROUGH'}
-    ];
-
-    this.BLOCK_TYPES = [
-      {label: 'P', style: 'unstyled'},
-      {label: 'H1', style: 'header-one'},
-      {label: 'H2', style: 'header-two'},
-      {label: 'Blockquote', style: 'blockquote'},
-      {label: 'UL', style: 'unordered-list-item'},
-      {label: 'OL', style: 'ordered-list-item'},
-      {label: 'Code Block', style: 'code-block'}
-    ];
-
-    this.state = {
-      editorState: value ?
-        EditorState.createWithContent(
-          ContentState.createFromBlockArray(htmlToContent(value)),
-          decorator
-        ) :
-        EditorState.createEmpty(decorator)
-    };
-
-    this.focus = () => this.refs.editor.focus();
-
-    this.onChange = (editorState) => {
-      let previousContent = this.state.editorState.getCurrentContent();
-      this.setState({editorState});
-
-      // only emit html when content changes
-      if( previousContent !== editorState.getCurrentContent() ) {
-        this.emitHTML(editorState);
-      }
-    };
-
-    function emitHTML(editorState) {
-      let raw = convertToRaw( editorState.getCurrentContent() );
-      let html = draftRawToHtml(raw);
-      this.props.onChange(html);
-    }
-
-    this.emitHTML = debounce(emitHTML, this.props.debounce);
-
-    this.handleKeyCommand = (command) => this._handleKeyCommand(command);
-    this.toggleBlockType = (type) => this._toggleBlockType(type);
-    this.toggleInlineStyle = (style) => this._toggleInlineStyle(style);
-    this.handleReturn = (e) => this._handleReturn(e);
-    this.addLink = this._addLink.bind(this);
-    this.removeLink = this._removeLink.bind(this);
-
-    this.logState = () => {
-      const content = this.state.editorState.getCurrentContent();
-      return(
-        window.console.log(convertToRaw(content))
-      )
-    };
+    //let { onChange } = props;
   }
 
-  _handleKeyCommand(command) {
-    const {editorState} = this.state;
-    const newState = RichUtils.handleKeyCommand(editorState, command);
-    if (newState) {
-      this.onChange(newState);
-      return true;
+  moveToEnd(element) {
+    var range = document.createRange();
+    var sel = window.getSelection();
+
+    try{
+      range.setStart(element.lastChild, element.lastChild.innerText.length);
+    }catch(e){
+      range.setStart(element.lastChild.lastChild, element.lastChild.innerText.length);
+    }
+
+
+    range.collapse(true);
+    sel.removeAllRanges();
+    sel.addRange(range);
+  }
+
+  whichTag(tagName){
+    var sel, containerNode;
+    tagName = tagName.toUpperCase();
+    if (window.getSelection) {
+      sel = window.getSelection();
+      if (sel.rangeCount > 0) {
+        containerNode = sel.getRangeAt(0).commonAncestorContainer;
+      }
+    }else if( (sel = document.selection) && sel.type != 'Control' ) {
+      containerNode = sel.createRange().parentElement();
+    }
+    while (containerNode) {
+      if (containerNode.nodeType == 1 && containerNode.tagName == tagName) {
+        return true;
+      }
+      containerNode = containerNode.parentNode;
     }
     return false;
   }
 
-  _toggleBlockType(blockType) {
-    window.console.log(blockType, 'blockType');
-    window.console.log(this.state.editorState, 'this.state.editorState');
 
-    this.onChange(
-      RichUtils.toggleBlockType(
-        this.state.editorState,
-        blockType
-      )
-    );
+  EditorExecCommand(command_param){
+    var editor =  ReactDOM.findDOMNode(this.refs.editor);
+    document.execCommand( command_param );
+    editor.focus();
+  }
+  removeChild(){
+    var range = window.getSelection().getRangeAt(0);
+    var element = range.commonAncestorContainer;
+    var elementPrev = element.previousElementSibling;
+    switch (element.nodeName){
+      case 'FIGURE':
+        // window.console.dir(element.previousElementSibling, 'element');
+        element.parentElement.removeChild(element);
+    }
+
+    document.execCommand('formatblock',false,'P');
+
+    window.console.log(elementPrev);
+    window.console.dir(elementPrev);
+    this.moveToEnd(elementPrev.nextElementSibling);
+
+    //this.moveToEnd(window.getSelection().getRangeAt(0));
   }
 
-  _toggleInlineStyle(inlineStyle) {
-    this.onChange(
-      RichUtils.toggleInlineStyle(
-        this.state.editorState,
-        inlineStyle
-      )
-    );
+
+  reFormatBlock(e){
+    if (e.keyCode === 13) {
+
+      if(this.whichTag('FIGURE')){
+        window.setTimeout(this.removeChild.bind(this));
+        return false;
+      }else{
+        document.execCommand('formatblock',false,'P');
+      }
+    }
+    if (e.keyCode == 37) window.setTimeout(this.controlNavBar.bind(this));
+    if (e.keyCode == 38) window.setTimeout(this.controlNavBar.bind(this));
+    if (e.keyCode == 39) window.setTimeout(this.controlNavBar.bind(this));
+    if (e.keyCode == 40) window.setTimeout(this.controlNavBar.bind(this));
   }
-  _handleReturn(e) {
-    if (e.metaKey === true) {
-      return this._addLineBreak();
-    } else {
-      return false;
+
+  removeFormatBlock(command_param){
+    var sel = document.getSelection();
+    var focusNode = sel.focusNode;
+    var range = document.createRange();
+    range.selectNode(focusNode);
+    sel.removeAllRanges();
+    sel.addRange(range);
+    document.execCommand( command_param );
+    //frames.newTextArea.focus();
+  }
+
+  removeFormat(){
+    const Bold = document.queryCommandState('Bold');
+    const Italic = document.queryCommandState('Italic');
+    const Underline = document.queryCommandState('Underline');
+
+    if(Bold){
+      document.execCommand( 'Bold', null, '' );
+    }
+    if(Italic){
+      document.execCommand( 'Italic', null, '' );
+    }
+    if(Underline){
+      document.execCommand( 'Underline', null, '' );
+    }
+
+  }
+  controlNavBar(){
+    const refs =  this.refs;
+    ReactDOM.findDOMNode(refs.editor).focus();
+
+    const {removeFormat} =  this.refs;
+    let inlineState = [];
+    for(var item in refs){
+      if (item == 'editor') return;
+      var obj = refs[item];
+      let html = ReactDOM.findDOMNode(obj);
+      //window.console.log(item);
+      if(document.queryCommandState(item)){
+        html.className = html.className.replace(/active/g, '');
+        html.className = html.className + ' active'
+      }else{
+        if(item == 'Bold' || item == 'Italic' || item == 'Underline'){
+          inlineState.push(item);
+        }
+        html.className = html.className.replace(/active/g, '');
+      }
+    }
+    let html = ReactDOM.findDOMNode(removeFormat);
+    if(inlineState.length > 2){
+      html.className = html.className.replace(/active/g, '');
+      html.className = html.className + ' active'
+    }else{
+      html.className = html.className.replace(/active/g, '');
     }
   }
 
-  _addLineBreak(/* e */) {
-    let newContent, newEditorState/*, newSelection*/;
-    const {editorState} = this.state;
-    const content = editorState.getCurrentContent();
-    const selection = editorState.getSelection();
-    const block = content.getBlockForKey(selection.getStartKey());
-
-    window.console.log(content.toJS(), selection.toJS(), block.toJS());
-
-    if (block.type === 'code-block') {
-      newContent = Modifier.insertText(content, selection, '\n');
-      newEditorState = EditorState.push(editorState, newContent, 'add-new-line');
-      this.onChange(newEditorState);
-      return true;
-    } else {
-      return false;
+  insertHTML(elem){
+    if(elem == 'img'){
+      let img = '<figure style="text-align: center;"><img src="http://placekitten.com/200/300" alt=""/></figure><p><br/></p>';
+      document.execCommand('insertHTML', true, img);
     }
-  }
 
-  _addLink(/* e */) {
-    const {editorState} = this.state;
-    const selection = editorState.getSelection();
-    if (selection.isCollapsed()) {
-      return;
-    }
-    const href = window.prompt('Enter a URL');
-    const entityKey = Entity.create('link', 'MUTABLE', {href});
-    this.onChange(RichUtils.toggleLink(editorState, selection, entityKey));
-  }
-
-  _removeLink(/* e */) {
-    const {editorState} = this.state;
-    const selection = editorState.getSelection();
-    if (selection.isCollapsed()) {
-      return;
-    }
-    this.onChange( RichUtils.toggleLink(editorState, selection, null));
   }
 
   render() {
-    const {editorState} = this.state;
-
-    // If the user changes block type before entering any text, we can
-    // either style the placeholder or hide it. Let's just hide it now.
-    let className = 'RichEditor-editor';
-    var contentState = editorState.getCurrentContent();
-    if (!contentState.hasText()) {
-      if (contentState.getBlockMap().first().getType() !== 'unstyled') {
-        className += ' RichEditor-hidePlaceholder';
-      }
-    }
-
+    const { value, onTextChange} = this.props;
     return (
-      <div className="RichEditor-root">
-        <BlockStyleControls
-          editorState={editorState}
-          blockTypes={this.BLOCK_TYPES}
-          onToggle={this.toggleBlockType}
-          />
-        <InlineStyleControls
-          editorState={editorState}
-          onToggle={this.toggleInlineStyle}
-          inlineStyles={this.INLINE_STYLES}
-          />
-        <EntityControls
-          editorState={editorState}
-          entityControls={this.ENTITY_CONTROLS}
-          />
-        <div className={className} onClick={this.focus}>
-          <Editor
-            blockStyleFn={getBlockStyle}
-            customStyleMap={styleMap}
-            editorState={editorState}
-            handleKeyCommand={this.handleKeyCommand}
-            handleReturn={this.handleReturn}
-            onChange={this.onChange}
-            placeholder="Tell a story..."
-            ref="editor"
-            spellCheck={true}
-            />
+      <div className="richeditor-сomponent" >
+        <input type="button"  onClick={this.removeFormat.bind(this)} ref="removeFormat" value="T"/>
+        <input type="button" onClick={this.EditorExecCommand.bind(this, 'Bold' )} ref="Bold" value=" B "/>
+        <input type="button" onClick={this.EditorExecCommand.bind(this, 'Italic'  )} ref="Italic" value=" I "/>
+        <input type="button" onClick={this.EditorExecCommand.bind(this, 'Underline'  )} ref="Underline" value=" U "/>
+        &nbsp;
+        <input type="button" onClick={this.EditorExecCommand.bind(this, 'removeFormat'  )} ref="removeFormat" value=" removeFormat "/>
+        &nbsp;
+        <input type="button" onClick={this.EditorExecCommand.bind(this, 'JustifyLeft'  )} ref="JustifyLeft" value=" Left "/>
+        <input type="button" onClick={this.EditorExecCommand.bind(this, 'JustifyCenter' )} ref="JustifyCenter" value=" Center "/>
+        <input type="button" onClick={this.EditorExecCommand.bind(this, 'JustifyRight'  )} ref="JustifyRight" value=" Right "/>
+        <input type="button" onClick={this.EditorExecCommand.bind(this, 'justifyFull'  )} ref="justifyFull" value=" Full "/>
+        &nbsp;
+        <input type="button" onClick={this.EditorExecCommand.bind(this, 'InsertOrderedList' )} data-value="InsertOrderedList" value=" OL "/>
+        <input type="button" onClick={this.EditorExecCommand.bind(this, 'InsertUnorderedList'  )} data-value="InsertUnorderedList" value=" UL "/>
+        &nbsp;
+        <input type="button" onClick={this.insertHTML.bind(this, 'img')} data-value="img" value=" img "/>
 
-        </div>
-
-        <input
-          onClick={this.logState.bind()}
-          type="button"
-          value="Log State"
-          />
+        <div contentEditable="true" id="editor" ref="editor" onClick={this.controlNavBar.bind(this)} onInput={onTextChange} onKeyDown={this.reFormatBlock.bind(this)} dangerouslySetInnerHTML={{ __html: value }} />
       </div>
     );
   }
-}
-// Custom overrides for "code" style.
-const styleMap = {
-  CODE: {
-    backgroundColor: 'rgba(0, 0, 0, 0.05)',
-    fontFamily: '"Inconsolata", "Menlo", "Consolas", monospace',
-    fontSize: 16,
-    padding: 2
-  }
-};
 
-function getBlockStyle(block) {
-  switch (block.getType()) {
-    case 'blockquote': return 'RichEditor-blockquote';
-    default: return null;
+  componentDidMount(){
+    //document.execCommand('formatblock',false,'P');
+    //const {checkIsDragging} = this.props;
+    //
+    //
+    //var editor =  ReactDOM.findDOMNode(this.refs.editor);
+    //
+    //editor.addEventListener('focus', function() {
+    //  checkIsDragging(true);
+    //});
+    //
+    //editor.addEventListener('blur', function() {
+    //  window.console.log(editor);
+    //  checkIsDragging(false);
+    //});
+
   }
+
 }
+
+
 
 RichEditorComponent.displayName = 'EditorRichEditorComponent';
 
