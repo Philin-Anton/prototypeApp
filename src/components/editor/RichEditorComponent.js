@@ -21,7 +21,6 @@ class RichEditorComponent extends React.Component {
       range.setStart(element.lastChild.lastChild, element.lastChild.innerText.length);
     }
 
-
     range.collapse(true);
     sel.removeAllRanges();
     sel.addRange(range);
@@ -65,8 +64,6 @@ class RichEditorComponent extends React.Component {
 
     document.execCommand('formatblock',false,'P');
 
-    window.console.log(elementPrev);
-    window.console.dir(elementPrev);
     this.moveToEnd(elementPrev.nextElementSibling);
 
     //this.moveToEnd(window.getSelection().getRangeAt(0));
@@ -120,10 +117,10 @@ class RichEditorComponent extends React.Component {
     const refs =  this.refs;
     ReactDOM.findDOMNode(refs.editor).focus();
 
-    const {removeFormat} =  this.refs;
+    const {Text} =  this.refs;
     let inlineState = [];
     for(var item in refs){
-      if (item == 'editor') return;
+      if (item == 'editor') continue;
       var obj = refs[item];
       let html = ReactDOM.findDOMNode(obj);
       //window.console.log(item);
@@ -137,7 +134,7 @@ class RichEditorComponent extends React.Component {
         html.className = html.className.replace(/active/g, '');
       }
     }
-    let html = ReactDOM.findDOMNode(removeFormat);
+    let html = ReactDOM.findDOMNode(Text);
     if(inlineState.length > 2){
       html.className = html.className.replace(/active/g, '');
       html.className = html.className + ' active'
@@ -148,22 +145,29 @@ class RichEditorComponent extends React.Component {
 
   insertHTML(elem){
     if(elem == 'img'){
-      let img = '<figure style="text-align: center;"><img src="http://placekitten.com/200/300" alt=""/></figure><p><br/></p>';
-      document.execCommand('insertHTML', true, img);
-    }
+      var genID = Date.now();
+      let figure = '<figure style="text-align: center" id="'+genID+'"><img src="http://placekitten.com/200/300" alt=""/></figure><p><br/></p>';
+      document.execCommand('insertHTML', true, figure);
 
+      document.getElementById(genID).getAttribute({contenteditable:'false'});
+    }
+  }
+  addBlockquote(BlockElem){
+    var editor =  ReactDOM.findDOMNode(this.refs.editor);
+    document.execCommand( 'formatBlock', false, BlockElem );
+    editor.focus();
   }
 
   render() {
     const { value, onTextChange} = this.props;
     return (
       <div className="richeditor-сomponent" >
-        <input type="button"  onClick={this.removeFormat.bind(this)} ref="removeFormat" value="T"/>
+        <input type="button"  onClick={this.removeFormat.bind(this)} ref="Text" value="T"/>
         <input type="button" onClick={this.EditorExecCommand.bind(this, 'Bold' )} ref="Bold" value=" B "/>
         <input type="button" onClick={this.EditorExecCommand.bind(this, 'Italic'  )} ref="Italic" value=" I "/>
         <input type="button" onClick={this.EditorExecCommand.bind(this, 'Underline'  )} ref="Underline" value=" U "/>
         &nbsp;
-        <input type="button" onClick={this.EditorExecCommand.bind(this, 'removeFormat'  )} ref="removeFormat" value=" removeFormat "/>
+        <input type="button" onClick={this.addBlockquote.bind(this, 'BLOCKQUOTE'  )} ref="Blockquote" value=" Blockquote "/>
         &nbsp;
         <input type="button" onClick={this.EditorExecCommand.bind(this, 'JustifyLeft'  )} ref="JustifyLeft" value=" Left "/>
         <input type="button" onClick={this.EditorExecCommand.bind(this, 'JustifyCenter' )} ref="JustifyCenter" value=" Center "/>
