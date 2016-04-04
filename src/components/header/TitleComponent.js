@@ -5,6 +5,7 @@ import { connect } from 'react-redux'
 import { createSelector } from 'reselect'
 
 import { actionWidgetTitle} from '../../actions/index';
+
 const setTitle =  actionWidgetTitle.setTitle;
 
 require('styles/header/Title.scss');

@@ -6,6 +6,8 @@ import { createSelector } from 'reselect'
 
 import Header from './header/IndexComponent';
 import WidgetsList from './widgets/WidgetsListComponent.js';
+import FooterComponent from '../../src/components/FooterComponent';
+
 
 require('styles//HomeContainer.scss');
 
@@ -15,6 +17,7 @@ class HomeContainerComponent extends React.Component {
       <div className={'homecontainer-component ' + 'color-'+this.props.bodyColor.id} >
         <Header/>
         <WidgetsList />
+        <FooterComponent/>
       </div>
     );
   }

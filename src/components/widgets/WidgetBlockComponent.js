@@ -1,24 +1,24 @@
 'use strict';
 
 import React from 'react';
+import ReactDOM from 'react-dom';
 import { DragSource, DropTarget } from 'react-dnd';
 
 import WidgetTypes from './CardTypesComponent';
-
-import NavBar from '../navBar/ControlWidgetsComponent';
 
 import RichEditor from '../editor/RichEditorComponent';
 
 import { drawFrame,  classNames, setLocalStore, getLocalStore } from '../../api/maggo';
 
-
-
-
 require('styles/widgets/WidgetBlock.scss');
+let isDraggable = true;
 
 const widgetSource = {
   beginDrag(props) {
     return { id: props.id };
+  },
+  canDrag(){
+    return isDraggable ? true : false;
   }
 };
 
@@ -63,21 +63,6 @@ class WidgetBlocksListComponent extends React.Component {
     if(getWidgetsCheck.id != id) widgetsCheck(id);
   }
 
-  getEditorContents(){
-    return this.state.html
-  }
-
-  checkIsDragging(status){
-    window.console.log(status);
-    const nextState = this.drawFrame({
-      status:{
-        $set: status
-      }
-    });
-    this.setState(nextState);
-  }
-
-
   render() {
     const {id, isDragging, connectDragSource, connectDropTarget , getWidgetsCheck/*, getWidgetElem*/} = this.props;
     const itsRight = getWidgetsCheck.id === id;
@@ -88,27 +73,28 @@ class WidgetBlocksListComponent extends React.Component {
     });
 
     return connectDragSource(connectDropTarget(
-      <div className={className} ref={(c) => this._connectDragSource = c} onClick={this.onClick.bind(this)}>
-        { itsRight ?
-          <NavBar id={id}/>
-          : null }
+      <div className={className} onClick={this.onClick.bind(this)}>
 
         { id }
 
-        <RichEditor value={this.state.html} /*checkIsDragging={this.checkIsDragging.bind(this)}*/ onTextChange={this.onTextChange.bind(this)} />
+        <RichEditor value={this.state.html} onTextChange={this.onTextChange.bind(this)} />
 
         <div dangerouslySetInnerHTML={{ __html: this.state.html }} />
       </div>
     ));
   }
-  //componentDidUpdate(){
-  //  if(this._connectDragSource.className.indexOf('check') != -1){
-  //    window.console.log( this.state.status);
-  //    this._connectDragSource.setAttribute('draggable', !this.state.status);
-  //  }else{
-  //    this._connectDragSource.setAttribute('draggable', true);
-  //  }
-  //}
+
+  componentDidMount(){
+    var editor = ReactDOM.findDOMNode(this).querySelector('.editor');
+
+    editor.addEventListener('focus', function() {
+      isDraggable = false;
+    }.bind(this));
+
+    editor.addEventListener('blur', function() {
+      isDraggable = true;
+    }.bind(this));
+  }
 }
 
 WidgetBlocksListComponent.displayName = 'WidgetsWidgetBlocksListComponent';
@@ -127,8 +113,9 @@ WidgetBlocksListComponent.propTypes = {
 };
 // WidgetBlocksListComponent.defaultProps = {};
 
-WidgetBlocksListComponent = DropTarget(WidgetTypes.CARD, widgetTarget, connect => ({
-  connectDropTarget: connect.dropTarget()
+WidgetBlocksListComponent = DropTarget(WidgetTypes.CARD, widgetTarget, (connect, monitor) => ({
+  connectDropTarget: connect.dropTarget(),
+  isOver: monitor.isOver()
 }))(WidgetBlocksListComponent);
 
 WidgetBlocksListComponent = DragSource(WidgetTypes.CARD, widgetSource, (connect, monitor) => ({

@@ -8,6 +8,7 @@ import _titleController from './titleController'
 import _bodyColorController from './bodyColorController'
 import _listBlockController from './listBlockController'
 import _blockController from './blockController'
+import _editorController from './editorController'
 
 
 export const tagController = (state, action, _drawFrame) => {
@@ -32,4 +33,7 @@ export const listBlockController = (state, action, _drawFrame) => {
 
 export const blockController = (state, action, _drawFrame) => {
   return  new _blockController( state, action, _drawFrame);
+};
+export const editorController = (state, action, _drawFrame) => {
+  return  new _editorController( state, action, _drawFrame);
 };

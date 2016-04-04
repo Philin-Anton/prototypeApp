@@ -17,3 +17,7 @@ export const SET_TITLE = 'SET_TITLE';
 export const SET_BODY_COLOR = 'SET_BODY_COLOR';
 
 export const CREATE_EDITORS = 'CREATE_EDITORS';
+
+
+export const SAVE_RANGE = 'SAVE_RANGE';
+export const GET_RANGE = 'GET_RANGE';

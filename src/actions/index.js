@@ -8,7 +8,8 @@ import * as ActionWidgetBlock from './ActionWidgetBlock';
 import * as ActionWidgetNavBar from './ActionWidgetNavBar';
 import * as ActionWidgetForSales from './ActionWidgetForSales';
 import * as ActionWidgetBodyColor from './ActionWidgetBodyColor';
-import * as ActionWidgetList from './actionWidgetList';
+import * as ActionWidgetList from './ActionWidgetList';
+import * as ActionRichEditor from './ActionRichEditor';
 
 export const actionWidgetTag = ( () => {
   return ActionWidgetTag;
@@ -34,5 +35,8 @@ export const actionWidgetForSales = ( () => {
 
 export const actionWidgetBodyColor = ( () => {
   return ActionWidgetBodyColor;
+})();
+export const actionRichEditor = ( () => {
+  return ActionRichEditor;
 })();
 

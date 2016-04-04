@@ -22,7 +22,7 @@ class WidgetsListComponent extends React.Component {
     super(props, context);
     this.state = {
       widgetsCheck: {
-        id : false
+        id : -1
       }
     };
     this.drawFrame = drawFrame(this.state);
