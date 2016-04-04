@@ -11,16 +11,19 @@ class editorController {
   }
 
   saveRange(){
+    window.console.log(JSON.stringify(this.action.range));
+    window.console.log(this.action.range);
+
+    const range = Object.assign({}, this.action.range);
+    window.console.log(range);
     return this.drawFrame({
       range: {
-        $set: [
-          this.action.range
-        ]
+        $set: JSON.stringify(this.action.range)
       }
     });
   }
   getRange(){
-    return this.state.getState();
+    return this.state.range;
   }
 
 }

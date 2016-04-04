@@ -16,7 +16,6 @@ const getRange = actionRichEditor.getRange;
 class RichEditorComponent extends React.Component {
   constructor(props) {
     super(props);
-    //let { onChange } = props;
   }
   controlNavBar(){
     const refs =  this.refs;
@@ -62,21 +61,69 @@ class RichEditorComponent extends React.Component {
     if (e.keyCode == 39) window.setTimeout(this.controlNavBar.bind(this));
     if (e.keyCode == 40) window.setTimeout(this.controlNavBar.bind(this));
   }
+  saveSelection(){
+    if(window.getSelection)//non IE Browsers
+    {
+      return window.getSelection().getRangeAt(0);
+    }
+    else if(document.selection)//IE
+    {
+      return document.selection.createRange();
+    }
+  }
+
+  restoreSelection() {
+    ReactDOM.findDOMNode(this.refs.editor).focus();
+    const { getRange } = this.props;
+    if (getRange() != null) {
+      if (window.getSelection)//non IE and there is already a selection
+      {
+        var s = window.getSelection();
+        if (s.rangeCount > 0)
+          s.removeAllRanges();
+        s.addRange(getRange());
+      }
+      else if (document.createRange)//non IE and no selection
+      {
+        window.getSelection().addRange(getRange());
+      }
+      else if (document.selection)//IE
+      {
+        getRange().select();
+      }
+    }
+  }
   onMouseDown(e){
-    e.preventDefault();
+    //e.preventDefault();
   }
   onClick(){
     var editor =  ReactDOM.findDOMNode(this.refs.editor);
     editor.focus();
+    const {saveRange} = this.props;
+
+    saveRange(this.saveSelection());
   }
   onMouseUp(){
-  }
 
+  }
+  onKeyDown(){
+
+  }
+  onInput(){
+    const {saveRange} = this.props;
+    saveRange(this.saveSelection());
+  }
   render() {
-    const { value, onTextChange} = this.props;
+    const { value } = this.props;
     return (
       <div className="richeditor-сomponent" >
-        <div contentEditable="true" className="editor" ref="editor" onMouseDown={this.onMouseDown.bind(this)} onClick={this.onClick.bind(this)} onMouseUp={this.onMouseUp.bind(this)} onInput={onTextChange} onKeyDown={this.reFormatBlock.bind(this)} dangerouslySetInnerHTML={{ __html: value }} />
+        <div contentEditable="true" className="editor" ref="editor"
+             onMouseDown={this.onMouseDown.bind(this)}
+             onClick={this.onClick.bind(this)}
+             onMouseUp={this.onMouseUp.bind(this)}
+             onInput={this.onInput.bind(this)}
+             onKeyDown={this.onKeyDown.bind(this)}
+             dangerouslySetInnerHTML={{ __html: value }} />
       </div>
     );
   }

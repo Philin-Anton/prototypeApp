@@ -25,7 +25,7 @@ const getRangeUnsafe = ()=> {
 
 export function getRange() {
   return (dispatch, getState)=> {
-  const range = getState().WidgetBlocks.range;
+  const range = getState().EditorBlock.range;
     if (Object.keys(range)[0]) {
       dispatch(getRangeUnsafe());
     }

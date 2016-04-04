@@ -6,7 +6,6 @@ import * as types from '../constants/ActionTypes';
 import {drawFrame, getLocalStore, setLocalStore} from '../api/maggo';
 import { editorController } from './controllers/index';
 
-
 const InitState = getLocalStore('EditorBlock') || {
     range:{},
     type:''
@@ -23,7 +22,6 @@ function EditorBlock(state = InitState, action){
         return _editorController.saveRange();
       case types.GET_RANGE:
         return _editorController.getRange();
-
       default:
         return state;
     }
