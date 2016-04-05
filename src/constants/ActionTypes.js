@@ -21,3 +21,8 @@ export const CREATE_EDITORS = 'CREATE_EDITORS';
 
 export const SAVE_RANGE = 'SAVE_RANGE';
 export const GET_RANGE = 'GET_RANGE';
+
+export const SAVE_ELEM = 'SAVE_ELEM';
+export const GET_ELEM = 'GET_ELEM';
+
+export const RESTORE_RANGE = 'RESTORE_RANGE';

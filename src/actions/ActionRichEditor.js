@@ -4,16 +4,16 @@
 
 import * as types from '../constants/ActionTypes';
 
-const saveRangeUnsafe = (range)=> {
+const saveRangeUnsafe = (elem)=> {
   return {
     type: types.SAVE_RANGE,
-    range
+    elem
   }
 };
 
-export const saveRange = (range) => {
+export const saveRange = (elem) => {
   return (dispatch)=> {
-    dispatch(saveRangeUnsafe(range));
+    dispatch(saveRangeUnsafe(elem));
   }
 };
 
@@ -25,9 +25,49 @@ const getRangeUnsafe = ()=> {
 
 export function getRange() {
   return (dispatch, getState)=> {
-  const range = getState().EditorBlock.range;
+    const range = getState().EditorBlock.range;
     if (Object.keys(range)[0]) {
       dispatch(getRangeUnsafe());
     }
   }
 }
+
+const restoreRangeUnsafe = (elem, saveRange)=> {
+  return {
+    type: types.RESTORE_RANGE,
+    elem,
+    saveRange
+  }
+};
+
+export const restoreRange = (elem, saveRange) => {
+  return (dispatch)=> {
+    dispatch(restoreRangeUnsafe(elem, saveRange));
+  }
+};
+
+const saveElemUnsafe = (elem)=> {
+  return {
+    type: types.SAVE_ELEM,
+    elem
+  }
+};
+
+export const saveElem = (elem) => {
+  return (dispatch)=> {
+    dispatch(saveElemUnsafe(elem));
+  }
+};
+
+const getElemUnsafe = (elem)=> {
+  return {
+    type: types.GET_ELEM,
+    elem
+  }
+};
+
+export const getElem = (elem) => {
+  return (dispatch)=> {
+    dispatch(getElemUnsafe(elem));
+  }
+};

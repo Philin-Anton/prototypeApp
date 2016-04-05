@@ -61,17 +61,6 @@ class RichEditorComponent extends React.Component {
     if (e.keyCode == 39) window.setTimeout(this.controlNavBar.bind(this));
     if (e.keyCode == 40) window.setTimeout(this.controlNavBar.bind(this));
   }
-  saveSelection(){
-    if(window.getSelection)//non IE Browsers
-    {
-      return window.getSelection().getRangeAt(0);
-    }
-    else if(document.selection)//IE
-    {
-      return document.selection.createRange();
-    }
-  }
-
   restoreSelection() {
     ReactDOM.findDOMNode(this.refs.editor).focus();
     const { getRange } = this.props;
@@ -100,8 +89,7 @@ class RichEditorComponent extends React.Component {
     var editor =  ReactDOM.findDOMNode(this.refs.editor);
     editor.focus();
     const {saveRange} = this.props;
-
-    saveRange(this.saveSelection());
+    saveRange(editor);
   }
   onMouseUp(){
 
@@ -111,7 +99,8 @@ class RichEditorComponent extends React.Component {
   }
   onInput(){
     const {saveRange} = this.props;
-    saveRange(this.saveSelection());
+    var editor =  ReactDOM.findDOMNode(this.refs.editor);
+    saveRange(editor);
   }
   render() {
     const { value } = this.props;

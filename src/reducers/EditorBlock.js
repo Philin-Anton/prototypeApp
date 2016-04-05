@@ -22,6 +22,12 @@ function EditorBlock(state = InitState, action){
         return _editorController.saveRange();
       case types.GET_RANGE:
         return _editorController.getRange();
+      case types.SAVE_ELEM:
+        return _editorController.saveElem();
+      case types.GET_ELEM:
+        return _editorController.getElem();
+      case types.RESTORE_RANGE:
+        return _editorController.restoreRange();
       default:
         return state;
     }
