@@ -16,6 +16,7 @@ export const SET_TITLE = 'SET_TITLE';
 
 export const SET_BODY_COLOR = 'SET_BODY_COLOR';
 
+export const ADD_HTML = 'ADD_HTML';
 export const CREATE_EDITORS = 'CREATE_EDITORS';
 
 

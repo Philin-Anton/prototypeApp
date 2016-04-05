@@ -10,31 +10,27 @@ class blockController {
         this.drawFrame = _drawFrame;
   }
 
-  createEditors(){
+  addHtml(){
     const widgetsByIndex = this.state.widgetsByIndex;
-    const index = this.action.index;
+    const id = this.action.id;
+    const html = this.action.html;
 
-    const editElem = widgetsByIndex[index];
-    let newEditor = {};
+    const elem = widgetsByIndex.filter(item => {
+      return item.id == index
+    })[0];
 
-    if(!!editElem.edit){
-      const lastKey = editElem.edit.length;
-      newEditor.id = lastKey;
-      newEditor.content = [];
-      editElem.edit.push(newEditor);
-    }else{
-      newEditor.id = 0;
-      newEditor.content = [];
-      editElem.edit = [];
-      editElem.edit.push(newEditor);
-    }
+    const index = widgetsByIndex.findIndex(item => {
+      return JSON.stringify(item) == JSON.stringify(elem);
+    });
 
-    window.console.log(newEditor, 'newEditor');
-    window.console.log(widgetsByIndex, 'widgetsByIndex');
-    //return this.state;
+    const newBlock ={
+      id,
+      html
+    };
+
     return this.drawFrame({
       widgetsByIndex: {
-        $splice: [[index, 1, widgetsByIndex[index]]]
+        $splice: [[index, 1, newBlock]]
       }
     });
   }

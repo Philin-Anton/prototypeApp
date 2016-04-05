@@ -61,6 +61,9 @@ function WidgetBlocks(state = InitState, action){
       case types.CREATE_EDITORS:
         return _blockController.createEditors();
 
+      case types.ADD_HTML:
+        return _blockController.addHtml();
+
       default:
         return state;
     }

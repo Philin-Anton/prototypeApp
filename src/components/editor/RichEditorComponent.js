@@ -8,14 +8,21 @@ import { createSelector } from 'reselect'
 
 require('styles/editor/RichEditor.scss');
 
-import { actionRichEditor } from '../../actions/index';
+import { drawFrame } from '../../api/maggo';
+
+import { actionRichEditor, actionWidgetBlock } from '../../actions/index';
 
 const saveRange = actionRichEditor.saveRange;
 const getRange = actionRichEditor.getRange;
+const addHtml = actionWidgetBlock.addHtml;
 
 class RichEditorComponent extends React.Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      html: props.html ||'<p><br/></p>'
+    };
   }
   whichTag(tagName){
     var sel, containerNode;
@@ -113,27 +120,6 @@ class RichEditorComponent extends React.Component {
     sel.addRange(range);
   }
 
-  restoreSelection() {
-    ReactDOM.findDOMNode(this.refs.editor).focus();
-    const { getRange } = this.props;
-    if (getRange() != null) {
-      if (window.getSelection)//non IE and there is already a selection
-      {
-        var s = window.getSelection();
-        if (s.rangeCount > 0)
-          s.removeAllRanges();
-        s.addRange(getRange());
-      }
-      else if (document.createRange)//non IE and no selection
-      {
-        window.getSelection().addRange(getRange());
-      }
-      else if (document.selection)//IE
-      {
-        getRange().select();
-      }
-    }
-  }
   onMouseDown(e){
     //e.preventDefault();
   }
@@ -146,16 +132,20 @@ class RichEditorComponent extends React.Component {
   onMouseUp(){
 
   }
+
   onKeyDown(e){
     this.reFormatBlock.call(this, e)
   }
-  onInput(){
-    const {saveRange} = this.props;
+
+  onInput(e){
+    const {saveRange, addHtml, id} = this.props;
     var editor =  ReactDOM.findDOMNode(this.refs.editor);
     saveRange(editor);
+
+    addHtml(id, e.target.innerHTML);
   }
   render() {
-    const { value } = this.props;
+    const { html } = this.props;
     return (
       <div className="richeditor-сomponent" >
         <div contentEditable="true" className="editor" ref="editor"
@@ -164,26 +154,12 @@ class RichEditorComponent extends React.Component {
              onMouseUp={this.onMouseUp.bind(this)}
              onInput={this.onInput.bind(this)}
              onKeyDown={this.onKeyDown.bind(this)}
-             dangerouslySetInnerHTML={{ __html: value }} />
+             dangerouslySetInnerHTML={{ __html: html }} />
       </div>
     );
   }
 
   componentDidMount(){
-    //document.execCommand('formatblock',false,'P');
-    //const {checkIsDragging} = this.props;
-    //
-    //
-    //var editor =  ReactDOM.findDOMNode(this.refs.editor);
-    //
-    //editor.addEventListener('focus', function() {
-    //  checkIsDragging(true);
-    //});
-    //
-    //editor.addEventListener('blur', function() {
-    //  window.console.log(editor);
-    //  checkIsDragging(false);
-    //});
 
   }
 
@@ -198,9 +174,13 @@ RichEditorComponent.displayName = 'EditorRichEditorComponent';
 // RichEditorComponent.defaultProps = {};
 
 const getEditorBlockState = state => state.EditorBlock;
+const getWidgetBlocksState = state => state.WidgetBlocks;
 
-const select = createSelector([getEditorBlockState], state => {
-  return {editorBlock: state};
+const select = createSelector([getEditorBlockState, getWidgetBlocksState], (editorBlock, widgetBlocks )=> {
+  return {
+    editorBlock,
+    widgetBlocks
+  };
 });
 
-export default connect(select, {saveRange, getRange})(RichEditorComponent);
+export default connect(select, {saveRange, getRange, addHtml})(RichEditorComponent);

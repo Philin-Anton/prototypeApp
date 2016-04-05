@@ -8,7 +8,7 @@ import WidgetTypes from './CardTypesComponent';
 
 import RichEditor from '../editor/RichEditorComponent';
 
-import { drawFrame,  classNames, setLocalStore, getLocalStore } from '../../api/maggo';
+import {  classNames, setLocalStore, getLocalStore } from '../../api/maggo';
 
 require('styles/widgets/WidgetBlock.scss');
 let isDraggable = true;
@@ -35,26 +35,6 @@ const widgetTarget = {
 class WidgetBlocksListComponent extends React.Component {
   constructor(props, context) {
     super(props, context);
-
-
-    this.state = getLocalStore('editorStore') || {
-      html: '<p><br/></p>',
-      status: true
-    };
-
-    this.drawFrame = drawFrame(this.state);
-  }
-
-  onTextChange(event) {
-
-    const nextState = this.drawFrame({
-      html: {
-        $set: event.target.innerHTML
-      }
-    });
-
-    setLocalStore(nextState,'editorStore');
-    //this.setState(nextState);
   }
 
   onClick(event){
@@ -64,7 +44,7 @@ class WidgetBlocksListComponent extends React.Component {
   }
 
   render() {
-    const {id, isDragging, connectDragSource, connectDropTarget , getWidgetsCheck/*, getWidgetElem*/} = this.props;
+    const {id, isDragging, connectDragSource, connectDropTarget , getWidgetsCheck, html/*, getWidgetElem*/} = this.props;
     const itsRight = getWidgetsCheck.id === id;
     const className = classNames({
       'widgetblock-component':true,
@@ -74,7 +54,7 @@ class WidgetBlocksListComponent extends React.Component {
 
     return connectDragSource(connectDropTarget(
       <div className={className} onClick={this.onClick.bind(this)}>
-        <RichEditor value={this.state.html} onTextChange={this.onTextChange.bind(this)}  id={id}/>
+        <RichEditor id={id} html={html}/>
       </div>
     ));
   }

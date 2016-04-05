@@ -18,3 +18,17 @@ export const createEditors = (index) => {
     dispatch(createEditorsUnsafe(index));
   }
 };
+
+const addHtmlUnsafe = (id, html)=> {
+  return {
+    type: types.ADD_HTML,
+    id,
+    html
+  }
+};
+
+export const addHtml = (id, html) => {
+  return (dispatch)=> {
+    dispatch(addHtmlUnsafe(id, html));
+  }
+};

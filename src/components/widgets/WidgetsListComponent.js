@@ -99,6 +99,7 @@ class WidgetsListComponent extends React.Component {
             <WidgetBlock
               key={'key-'+widget.id}
               id={widget.id}
+              html={widget.html}
               widgetsListMove={this.widgetsListMove.bind(this)}
               widgetsCheck={this.widgetsCheck.bind(this)}
               getWidgetsCheck = {this.state.widgetsCheck}

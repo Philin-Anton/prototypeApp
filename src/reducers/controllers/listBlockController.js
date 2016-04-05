@@ -31,7 +31,7 @@ class listController {
     const newTAG = {
       id: this.action.id,
       block: this.action.block
-    }
+    };
 
     return this.drawFrame({
         widgetsById: {
