@@ -47,12 +47,12 @@ class BodyColorComponent extends React.Component {
 
   renderPopUp(){
     const active = (index) => (
-      index == this.props.bodyColor.id ? 'active' : null
+      index == this.props.bodyColor.id ? 'active' : ''
     ) ;
     return (
       <div>
         <div className="body-color-pop-up">
-          <div className="list-colors">
+          <div className="list-colors" style={{width : (this.getColors().length+1)/2 * (45 + 2) + 2 + 'px'}}>
             {
               this.getColors().map((item, index) => (
                 <div key={index} onClick={this.checkColorBody.bind(this)} className={active(index) + ' color-'+index}>
@@ -60,12 +60,8 @@ class BodyColorComponent extends React.Component {
               ))
             }
           </div>
-          <div className="close-popup-body-color" onClick={this.closePopup.bind(this)}>
-            <Icon glyph="remove"/>
-          </div>
         </div>
         <div className="background-popup-body-color" onClick={this.closePopup.bind(this)}></div>
-
       </div>
     )
   }
@@ -96,18 +92,10 @@ class BodyColorComponent extends React.Component {
   render() {
     return (
       <div className="bodycolor-component" >
-
-        <div onClick={this.onClick.bind(this)}>
-          <div className={'preview-bodycolor' + ' '+ 'color-' + this.props.bodyColor.id} >
-
-          </div>
-          <span>
-            Check Body Color
-          </span>
+        <div className="bottom-control" onClick={this.onClick.bind(this)}>
+          <Icon glyph="palitra" />
         </div>
-
         {this.state.openPopUp? this.renderPopUp.call(this) : null}
-
       </div>
     );
   }

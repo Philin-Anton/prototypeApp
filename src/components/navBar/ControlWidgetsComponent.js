@@ -8,6 +8,7 @@ import { createSelector } from 'reselect'
 
 
 import Icon from '../glyphicon/IndexComponent';
+import BodyColor from '../header/BodyColorComponent';
 
 import { actionWidgetBlock } from '../../actions/index';
 const createEditors =  actionWidgetBlock.createEditors;
@@ -28,11 +29,8 @@ class ControlWidgetsComponent extends React.Component {
     const index = widgetsByIndex.findIndex(item => {
       return JSON.stringify(item) == JSON.stringify(elem);
     });
-
     createEditors(index);
-
     window.console.log(elem.id);
-
   }
 
 
@@ -143,9 +141,29 @@ class ControlWidgetsComponent extends React.Component {
   render() {
     return (
       <div className="controlwidgets-component">
-        <div onClick={this.TextCreate.bind(this)} >
+
+        <BodyColor />
+        <div className="bottom-control" >
+          <Icon glyph="minus" />
+        </div>
+
+        <div className="bottom-control" >
+          <Icon glyph="picture" />
+        </div>
+
+        <div className="bottom-control" >
+          <Icon glyph="font" />
+        </div>
+
+        <div className="bottom-control" >
+          <Icon glyph="option-horizontal" />
+        </div>
+
+
+        <div className="bottom-control" onClick={this.TextCreate.bind(this)} >
           <Icon glyph="text-width" />
         </div>
+
         <input type="button"  onClick={this.removeFormat.bind(this)} ref="Text" value="T"/>
         <input type="button" onClick={this.EditorExecCommand.bind(this, 'Bold' )} ref="Bold" value=" B "/>
         <input type="button" onClick={this.EditorExecCommand.bind(this, 'Italic'  )} ref="Italic" value=" I "/>

@@ -7,9 +7,6 @@ Icon.setDefaultFontPrefix('glyphicon');
 
 require('styles/glyphicon/Index.scss');
 
-require('styles/header/Tag.scss');
-
-
 class IndexComponent extends React.Component {
   render() {
     return (

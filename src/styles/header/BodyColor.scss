@@ -1,7 +1,5 @@
 .bodycolor-component {
-  position: relative;
-  display: flex;
-  align-items: center;
+  display: inline-block;
   .preview-bodycolor {
     border: 1px solid #333;
     width: 20px;
@@ -11,22 +9,22 @@
     margin-right: 10px;
   }
   .body-color-pop-up{
+    overflow: auto;
     position: absolute;
     z-index: 10;
-    background: #fff;
-    padding: 10px 20px 10px 10px;
+    background: #222222;
+    padding: 1px;
     border: 1px solid #000;
-    top: 100%;
-    width: 208px;
+    bottom: 0;
+    width: 100%;
     left: 0;
     .list-colors {
       &> div{
-        width: 15px;
-        height: 15px;
+        width: 45px;
+        height: 45px;
         float: left;
         cursor: pointer;
-        margin: 5px;
-        border-radius: 4px;
+        margin: 1px;
         &:hover, &.active {
           border: 1px solid #333;
         }
