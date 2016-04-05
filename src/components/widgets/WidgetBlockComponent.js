@@ -74,12 +74,7 @@ class WidgetBlocksListComponent extends React.Component {
 
     return connectDragSource(connectDropTarget(
       <div className={className} onClick={this.onClick.bind(this)}>
-
-        { id }
-
-        <RichEditor value={this.state.html} onTextChange={this.onTextChange.bind(this)} />
-
-        <div dangerouslySetInnerHTML={{ __html: this.state.html }} />
+        <RichEditor value={this.state.html} onTextChange={this.onTextChange.bind(this)}  id={id}/>
       </div>
     ));
   }

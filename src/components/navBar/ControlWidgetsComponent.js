@@ -10,8 +10,11 @@ import { createSelector } from 'reselect'
 import Icon from '../glyphicon/IndexComponent';
 import BodyColor from '../header/BodyColorComponent';
 
-import { actionWidgetBlock } from '../../actions/index';
-const createEditors =  actionWidgetBlock.createEditors;
+import { actionRichEditor } from '../../actions/index';
+
+const saveRange = actionRichEditor.saveRange;
+const restoreRange = actionRichEditor.restoreRange;
+const getRange = actionRichEditor.getRange;
 
 //import { CreateTextBlock } from './CreateTextBlockComponent'
 
@@ -33,66 +36,11 @@ class ControlWidgetsComponent extends React.Component {
     window.console.log(elem.id);
   }
 
-
-  moveToEnd(element) {
-    var range = document.createRange();
-    var sel = window.getSelection();
-
-    try{
-      range.setStart(element.lastChild, element.lastChild.innerText.length);
-    }catch(e){
-      range.setStart(element.lastChild.lastChild, element.lastChild.innerText.length);
-    }
-
-    range.collapse(true);
-    sel.removeAllRanges();
-    sel.addRange(range);
-  }
-
-  whichTag(tagName){
-    var sel, containerNode;
-    tagName = tagName.toUpperCase();
-    if (window.getSelection) {
-      sel = window.getSelection();
-      if (sel.rangeCount > 0) {
-        containerNode = sel.getRangeAt(0).commonAncestorContainer;
-      }
-    }else if( (sel = document.selection) && sel.type != 'Control' ) {
-      containerNode = sel.createRange().parentElement();
-    }
-    while (containerNode) {
-      if (containerNode.nodeType == 1 && containerNode.tagName == tagName) {
-        return true;
-      }
-      containerNode = containerNode.parentNode;
-    }
-    return false;
-  }
-
   EditorExecCommand(command_param){
     var editor =  ReactDOM.findDOMNode(this.refs.editor);
     document.execCommand( command_param );
     editor.focus();
   }
-  removeChild(){
-    var range = window.getSelection().getRangeAt(0);
-    var element = range.commonAncestorContainer;
-    var elementPrev = element.previousElementSibling;
-    switch (element.nodeName){
-      case 'FIGURE':
-        // window.console.dir(element.previousElementSibling, 'element');
-        element.parentElement.removeChild(element);
-    }
-
-    document.execCommand('formatblock',false,'P');
-
-    this.moveToEnd(elementPrev.nextElementSibling);
-
-    //this.moveToEnd(window.getSelection().getRangeAt(0));
-  }
-
-
-
 
   removeFormatBlock(command_param){
     var sel = document.getSelection();
@@ -119,17 +67,13 @@ class ControlWidgetsComponent extends React.Component {
     if(Underline){
       document.execCommand( 'Underline', null, '' );
     }
-
   }
-
 
   insertHTML(elem){
     if(elem == 'img'){
       var genID = Date.now();
-      let figure = '<figure style="text-align: center" id="'+genID+'"><img src="http://placekitten.com/200/300" alt=""/></figure><p><br/></p>';
-      document.execCommand('insertHTML', true, figure);
-
-      document.getElementById(genID).getAttribute({contenteditable:'false'});
+      let figure = '<figure style="text-align: center"><img src="http://placekitten.com/200/300" alt=""/></figure><p><br/></p>';
+      document.execCommand('insertHTML', null, figure);
     }
   }
   addBlockquote(BlockElem){
@@ -191,10 +135,10 @@ ControlWidgetsComponent.displayName = 'NavBarControlWidgetsComponent';
 // ControlWidgetsComponent.propTypes = {};
 // ControlWidgetsComponent.defaultProps = {};
 
-const getAllState = state => state.WidgetBlocks;
+const getEditorBlockState = state => state.EditorBlock;
 
-const select = createSelector([getAllState], state => {
-  return state;
+const select = createSelector([getEditorBlockState], (editorBlock) => {
+  return {editorBlock};
 });
 
-export default connect(select, {createEditors})(ControlWidgetsComponent);
+export default connect(select, {saveRange, restoreRange, getRange})(ControlWidgetsComponent);

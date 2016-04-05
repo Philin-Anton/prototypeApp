@@ -17,6 +17,25 @@ class RichEditorComponent extends React.Component {
   constructor(props) {
     super(props);
   }
+  whichTag(tagName){
+    var sel, containerNode;
+    tagName = tagName.toUpperCase();
+    if (window.getSelection) {
+      sel = window.getSelection();
+      if (sel.rangeCount > 0) {
+        containerNode = sel.getRangeAt(0).commonAncestorContainer;
+      }
+    }else if( (sel = document.selection) && sel.type != 'Control' ) {
+      containerNode = sel.createRange().parentElement();
+    }
+    while (containerNode) {
+      if (containerNode.nodeType == 1 && containerNode.tagName == tagName) {
+        return true;
+      }
+      containerNode = containerNode.parentNode;
+    }
+    return false;
+  }
   controlNavBar(){
     const refs =  this.refs;
     ReactDOM.findDOMNode(refs.editor).focus();
@@ -61,6 +80,39 @@ class RichEditorComponent extends React.Component {
     if (e.keyCode == 39) window.setTimeout(this.controlNavBar.bind(this));
     if (e.keyCode == 40) window.setTimeout(this.controlNavBar.bind(this));
   }
+  removeChild(){
+    var range = window.getSelection().getRangeAt(0);
+    var element = range.commonAncestorContainer;
+    var elementPrev = element.previousElementSibling;
+    switch (element.nodeName){
+      case 'FIGURE':
+        // window.console.dir(element.previousElementSibling, 'element');
+        element.parentElement.removeChild(element);
+    }
+
+    document.execCommand('formatblock',false,'P');
+
+    this.moveToEnd(elementPrev.nextElementSibling);
+
+    //this.moveToEnd(window.getSelection().getRangeAt(0));
+  }
+
+
+  moveToEnd(element) {
+    var range = document.createRange();
+    var sel = window.getSelection();
+
+    try{
+      range.setStart(element.lastChild, element.lastChild.textContent.length);
+    }catch(e){
+      range.setStart(element.lastChild.lastChild, element.lastChild.textContent.length);
+    }
+
+    range.collapse(true);
+    sel.removeAllRanges();
+    sel.addRange(range);
+  }
+
   restoreSelection() {
     ReactDOM.findDOMNode(this.refs.editor).focus();
     const { getRange } = this.props;
@@ -94,8 +146,8 @@ class RichEditorComponent extends React.Component {
   onMouseUp(){
 
   }
-  onKeyDown(){
-
+  onKeyDown(e){
+    this.reFormatBlock.call(this, e)
   }
   onInput(){
     const {saveRange} = this.props;
