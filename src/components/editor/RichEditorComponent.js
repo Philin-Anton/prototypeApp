@@ -8,12 +8,11 @@ import { createSelector } from 'reselect'
 
 require('styles/editor/RichEditor.scss');
 
-import { drawFrame } from '../../api/maggo';
 
 import { actionRichEditor, actionWidgetBlock } from '../../actions/index';
 
 const saveRange = actionRichEditor.saveRange;
-const getRange = actionRichEditor.getRange;
+const restoreRange = actionRichEditor.restoreRange;
 const addHtml = actionWidgetBlock.addHtml;
 
 class RichEditorComponent extends React.Component {
@@ -21,7 +20,7 @@ class RichEditorComponent extends React.Component {
     super(props);
 
     this.state = {
-      html: props.html ||'<p><br/></p>'
+      html: props.html || '<p><br/></p>'
     };
   }
   whichTag(tagName){
@@ -120,14 +119,14 @@ class RichEditorComponent extends React.Component {
     sel.addRange(range);
   }
 
-  onMouseDown(e){
+  onMouseDown(){
     //e.preventDefault();
   }
   onClick(){
     var editor =  ReactDOM.findDOMNode(this.refs.editor);
     editor.focus();
-    const {saveRange} = this.props;
-    saveRange(editor);
+    //const {saveRange} = this.props;
+    //saveRange(editor);
   }
   onMouseUp(){
 
@@ -138,16 +137,16 @@ class RichEditorComponent extends React.Component {
   }
 
   onInput(e){
-    const {saveRange, addHtml, id} = this.props;
-    var editor =  ReactDOM.findDOMNode(this.refs.editor);
-    saveRange(editor);
+    const {/*saveRange,*/ addHtml, id} = this.props;
+    //var editor =  ReactDOM.findDOMNode(this.refs.editor);
+    //saveRange(editor);
 
     addHtml(id, e.target.innerHTML);
   }
   render() {
     const { html } = this.props;
     return (
-      <div className="richeditor-сomponent" >
+      <div className="richeditor-сomponent">
         <div contentEditable="true" className="editor" ref="editor"
              onMouseDown={this.onMouseDown.bind(this)}
              onClick={this.onClick.bind(this)}
@@ -160,7 +159,10 @@ class RichEditorComponent extends React.Component {
   }
 
   componentDidMount(){
-
+    //var editor =  ReactDOM.findDOMNode(this.refs.editor);
+    //const {editorBlock, restoreRange} = this.props;
+    //const {range} = editorBlock;
+    //restoreRange(editor, range)
   }
 
 }
@@ -170,7 +172,10 @@ class RichEditorComponent extends React.Component {
 RichEditorComponent.displayName = 'EditorRichEditorComponent';
 
 // Uncomment properties you need
-// RichEditorComponent.propTypes = {};
+RichEditorComponent.propTypes = {
+ id: React.PropTypes.any.isRequired,
+ html: React.PropTypes.any.isRequired
+};
 // RichEditorComponent.defaultProps = {};
 
 const getEditorBlockState = state => state.EditorBlock;
@@ -183,4 +188,4 @@ const select = createSelector([getEditorBlockState, getWidgetBlocksState], (edit
   };
 });
 
-export default connect(select, {saveRange, getRange, addHtml})(RichEditorComponent);
+export default connect(select, {saveRange, restoreRange, addHtml})(RichEditorComponent);

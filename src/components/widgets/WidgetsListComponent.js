@@ -95,17 +95,21 @@ class WidgetsListComponent extends React.Component {
     return (
       <div className={'widgetslist-component ' }>
         {
-          widgetsByIndex.map(widget => (
-            <WidgetBlock
-              key={'key-'+widget.id}
-              id={widget.id}
-              html={widget.html}
-              widgetsListMove={this.widgetsListMove.bind(this)}
-              widgetsCheck={this.widgetsCheck.bind(this)}
-              getWidgetsCheck = {this.state.widgetsCheck}
-              getWidgetElem = {widget}
-              />
-          ))
+          widgetsByIndex.map(widget => {
+            window.console.log(widgetsByIndex, 'widgetsByIndex');
+            window.console.log(widget, 'widget');
+            return(
+              <WidgetBlock
+                key={widget.id}
+                id={widget.id}
+                html={widget.html ||'<p><br/></p>'}
+                widgetsListMove={this.widgetsListMove.bind(this)}
+                widgetsCheck={this.widgetsCheck.bind(this)}
+                getWidgetsCheck = {this.state.widgetsCheck}
+                getWidgetElem = {widget}
+                />
+            )})
+
         }
         <div onClick={this.addWidget.bind(this)}>
           Add Widget

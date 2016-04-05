@@ -8,14 +8,17 @@ import WidgetTypes from './CardTypesComponent';
 
 import RichEditor from '../editor/RichEditorComponent';
 
-import {  classNames, setLocalStore, getLocalStore } from '../../api/maggo';
+import {  classNames } from '../../api/maggo';
 
 require('styles/widgets/WidgetBlock.scss');
 let isDraggable = true;
 
 const widgetSource = {
   beginDrag(props) {
-    return { id: props.id };
+    return {
+      id: props.id ,
+      html:props.html
+    };
   },
   canDrag(){
     return isDraggable ? true : false;
@@ -54,7 +57,8 @@ class WidgetBlocksListComponent extends React.Component {
 
     return connectDragSource(connectDropTarget(
       <div className={className} onClick={this.onClick.bind(this)}>
-        <RichEditor id={id} html={html}/>
+        {id}
+        <RichEditor key={'RichEditor-'+id} id={id} html={html}/>
       </div>
     ));
   }
@@ -81,6 +85,7 @@ WidgetBlocksListComponent.propTypes = {
   connectDropTarget: React.PropTypes.func.isRequired,
   isDragging: React.PropTypes.bool.isRequired,
   id: React.PropTypes.any.isRequired,
+  html: React.PropTypes.any.isRequired,
   widgetsListMove: React.PropTypes.func.isRequired,
   widgetsCheck: React.PropTypes.func.isRequired,
   getWidgetsCheck: React.PropTypes.object.isRequired,

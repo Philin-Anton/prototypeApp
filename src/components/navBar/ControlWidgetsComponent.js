@@ -71,7 +71,6 @@ class ControlWidgetsComponent extends React.Component {
 
   insertHTML(elem){
     if(elem == 'img'){
-      var genID = Date.now();
       let figure = '<figure style="text-align: center"><img src="http://placekitten.com/200/300" alt=""/></figure><p><br/></p>';
       document.execCommand('insertHTML', null, figure);
     }
