@@ -30,32 +30,23 @@ class WidgetsListComponent extends React.Component {
 
   widgetsListMove(id, afterId) {
 
-    const widgetsById = this.props.widgetsById;
     const widgetsByIndex = this.props.widgetsByIndex;
 
-    const widget = widgetsById[id];
-    const afterWidget = widgetsById[afterId];
+    const widget = widgetsByIndex.filter(item => {
+      return item.id == id
+    })[0];
 
-    var widgetIndex = null;
+    const afterWidget = widgetsByIndex.filter(item => {
+      return item.id == afterId
+    })[0];
 
-    var afterIndex = null;
-    var index = 0;
-    for (let item of widgetsByIndex) {
-      if(JSON.stringify(item) == JSON.stringify(widget)){
-        widgetIndex = index;
-        break;
-      }
-      index++;
-    }
-    index = 0;
-    for (let item of widgetsByIndex) {
-      if(JSON.stringify(item) == JSON.stringify(afterWidget)){
-        afterIndex = index;
-        break;
-      }
-      index++;
-    }
-    index = null;
+    const widgetIndex = widgetsByIndex.findIndex(item => {
+      return JSON.stringify(item) == JSON.stringify(widget);
+    });
+
+    var afterIndex = widgetsByIndex.findIndex(item => {
+      return JSON.stringify(item) == JSON.stringify(afterWidget);
+    });
 
     this.props.reorderWidgetBlock(widgetIndex, afterIndex, widget );
 
@@ -69,7 +60,8 @@ class WidgetsListComponent extends React.Component {
     const {widgetsById/*, widgetsByIndex*/} = this.props;
 
     const newWidgets = {
-      id: Object.keys(widgetsById).length
+      id: Object.keys(widgetsById).length,
+      html:''
     };
 
     widgetsById[newWidgets.id] = newWidgets;
@@ -90,8 +82,6 @@ class WidgetsListComponent extends React.Component {
 
   render() {
     const {widgetsByIndex } = this.props;
-
-    window.console.log(this.props);
     return (
       <div className={'widgetslist-component ' }>
         {

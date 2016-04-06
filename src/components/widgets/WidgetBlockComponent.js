@@ -15,10 +15,7 @@ let isDraggable = true;
 
 const widgetSource = {
   beginDrag(props) {
-    return {
-      id: props.id ,
-      html:props.html
-    };
+    return { id: props.id };
   },
   canDrag(){
     return isDraggable ? true : false;
@@ -93,9 +90,8 @@ WidgetBlocksListComponent.propTypes = {
 };
 // WidgetBlocksListComponent.defaultProps = {};
 
-WidgetBlocksListComponent = DropTarget(WidgetTypes.CARD, widgetTarget, (connect, monitor) => ({
-  connectDropTarget: connect.dropTarget(),
-  isOver: monitor.isOver()
+WidgetBlocksListComponent = DropTarget(WidgetTypes.CARD, widgetTarget, (connect) => ({
+  connectDropTarget: connect.dropTarget()
 }))(WidgetBlocksListComponent);
 
 WidgetBlocksListComponent = DragSource(WidgetTypes.CARD, widgetSource, (connect, monitor) => ({

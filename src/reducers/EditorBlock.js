@@ -32,7 +32,6 @@ function EditorBlock(state = InitState, action){
         return state;
     }
   };
-
   const returnState = inspection();
   setLocalStore(returnState, 'EditorBlock');
   return returnState

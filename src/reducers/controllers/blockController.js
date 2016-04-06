@@ -16,16 +16,15 @@ class blockController {
     const html = this.action.html;
 
     const elem = widgetsByIndex.filter(item => {
-      return item.id == index
+      return item.id == id
     })[0];
 
     const index = widgetsByIndex.findIndex(item => {
       return JSON.stringify(item) == JSON.stringify(elem);
     });
-
     const newBlock ={
-      id,
-      html
+      id: id,
+      html: html
     };
 
     return this.drawFrame({
