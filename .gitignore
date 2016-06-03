@@ -30,3 +30,7 @@ node_modules
 
 # Bower
 bower_components/
+cfg/
+src/
+test/
+LICENSE
