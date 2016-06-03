@@ -6,7 +6,6 @@ import { connect } from 'react-redux'
 import { createSelector } from 'reselect'
 
 import { actionWidgetTag} from '../../actions/index';
-const getAllTags =  actionWidgetTag.getAllTags;
 const addToTag =  actionWidgetTag.addToTag;
 const deleteToTag =  actionWidgetTag.deleteToTag;
 
@@ -125,9 +124,7 @@ class TagComponent extends React.Component {
 TagComponent.displayName = 'HeaderTagComponent';
 
 // Uncomment properties you need
-//TagComponent.propTypes = {
-//  tags:
-//};
+// TagComponent.propTypes = {};
 // TagComponent.defaultProps = {};
 
 const getAllState = state => state.WidgetBlocks;
@@ -136,4 +133,4 @@ const select = createSelector([getAllState], state => {
   return state;
 });
 
-export default connect(select, {deleteToTag, getAllTags, addToTag})(TagComponent);
+export default connect(select, {deleteToTag, addToTag})(TagComponent);

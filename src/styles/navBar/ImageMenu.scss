@@ -1,0 +1,13 @@
+.imagemenu-component {
+  .bottom-control:first-child {
+    &:after {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: 5px;
+      bottom: 5px;
+      width: 1px;
+      background-color: #736f6f;
+    }
+  }
+}

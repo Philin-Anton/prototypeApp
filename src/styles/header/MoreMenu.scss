@@ -1,0 +1,14 @@
+.moremenu-component {
+  padding: 35px 0 17px;
+  text-align: right;
+  ul {
+    li {
+      display: inline-block;
+      cursor: pointer;
+      &:not(:first-child) {
+        margin-left: 20px;
+      }
+    }
+  }
+
+}

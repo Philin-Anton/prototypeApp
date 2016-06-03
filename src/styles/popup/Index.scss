@@ -1,0 +1,88 @@
+.popupindex-component {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  z-index: 20;
+  overflow-y: auto;
+  .popUpBackground {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1;
+  }
+  .popUpContainer {
+    cursor: auto;
+    width: 100%;
+    min-height: 100%;
+    background: #000;
+    color: #fff;
+    position: relative;
+    z-index: 2;
+    .headerPopUp {
+      position: relative;
+      padding: 0.708em 20px 0.333em 10px;
+      border-bottom: 1px solid #484645;
+      font-size: 1.714em;
+      text-align: center;
+      .close-popUp {
+        position: absolute;
+        right: 22px;
+        top: 11px;
+        cursor: pointer;
+        font-size: 1.2em;
+        display: flex;
+        align-items: center;
+        height: 74%;
+        &:hover {
+          color: #333;
+        }
+      }
+    }
+    .contentPopUp {
+      padding: 1.5em 1em;
+    }
+    &.edit-link-text {
+      background-color: white;
+      color: black;
+      .headerPopUp {
+        border-color: #ddd;
+      }
+      .action-icon-close {
+        background-position: -72px -24px;
+      }
+    }
+  }
+
+  @media only screen and (min-width: 768px) {
+    overflow-y: hidden;
+    .popUpContainer {
+      width: auto;
+      height: auto;
+      min-height: 0;
+      min-width: 380px;
+      box-shadow: 0 0 3px 1px rgba(255, 255, 255, 0.25);
+      .headerPopUp {
+        padding: 0.556em 1.111em 0.222em;
+        font-size: 1.286em;
+        text-align: left;
+        .close-popUp {
+          top: 3px;
+          right: 18px;
+          height: 88%;
+        }
+      }
+      .contentPopUp {
+        padding: 1.714em 1.429em 0.714em;
+      }
+    }
+  }
+}

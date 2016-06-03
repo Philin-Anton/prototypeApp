@@ -11,8 +11,6 @@ require('styles/header/BodyColor.scss');
 import { actionWidgetBodyColor } from '../../actions/index';
 const setBodyColor = actionWidgetBodyColor.setBodyColor;
 
-import Icon from '../glyphicon/IndexComponent';
-
 class BodyColorComponent extends React.Component {
 
   constructor(props, context) {
@@ -22,7 +20,8 @@ class BodyColorComponent extends React.Component {
     };
     this.drawFrame = drawFrame(this.state);
   }
-  getColors(){
+
+  getColors() {
     return [
       '#e10c0c', '#ff3232', '#fe8181', '#cc9933', '#facd73', '#f3eb92', '#27bbf1', '#81d6f7', '#a3fffb',
       '#ac2a4d', '#ff3399', '#f3cad2', '#ffa500', '#ffcc00', '#f9e257', '#2e32ea', '#336699', '#c1cbe8',
@@ -36,7 +35,7 @@ class BodyColorComponent extends React.Component {
     ];
   }
 
-  checkColorBody(event){
+  checkColorBody(event) {
     const className = event.target.className;
     const ID = className.split('-')[1];
     const color = this.getColors()[ID];
@@ -45,14 +44,14 @@ class BodyColorComponent extends React.Component {
     this.closePopup.call(this);
   }
 
-  renderPopUp(){
+  renderPopUp() {
     const active = (index) => (
       index == this.props.bodyColor.id ? 'active' : ''
-    ) ;
+    );
     return (
       <div>
         <div className="body-color-pop-up">
-          <div className="list-colors" style={{width : (this.getColors().length+1)/2 * (45 + 2) + 2 + 'px'}}>
+          <div className="list-colors" /* style={{width : (this.getColors().length+1)/2 * (45 + 2) + 2 + 'px'}} */ >
             {
               this.getColors().map((item, index) => (
                 <div key={index} onClick={this.checkColorBody.bind(this)} className={active(index) + ' color-'+index}>
@@ -66,17 +65,24 @@ class BodyColorComponent extends React.Component {
     )
   }
 
-  openPopup(){
+  openPopup() {
+    const {isMore, selectionMore} = this.props;
+
+    if(isMore){
+      selectionMore();
+    }
+
     const nextState = this.drawFrame({
-      $set:{
+      $set: {
         openPopUp: true
       }
     });
     this.setState(nextState);
   }
-  closePopup(){
+
+  closePopup() {
     const nextState = this.drawFrame({
-      $set:{
+      $set: {
         openPopUp: false
       }
     });
@@ -84,18 +90,18 @@ class BodyColorComponent extends React.Component {
     return false;
   }
 
-  onClick(){
+  onClick() {
     this.openPopup.call(this);
-   return false;
+    return false;
   }
 
   render() {
     return (
-      <div className="bodycolor-component" >
+      <div className="bodycolor-component">
         <div className="bottom-control" onClick={this.onClick.bind(this)}>
-          <Icon glyph="palitra" />
+          <span className="custom-icon custom-icon-palitra"></span>
         </div>
-        {this.state.openPopUp? this.renderPopUp.call(this) : null}
+        {this.state.openPopUp ? this.renderPopUp.call(this) : null}
       </div>
     );
   }

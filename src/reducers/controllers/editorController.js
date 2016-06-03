@@ -1,61 +1,74 @@
-/**
- * @author Anton.Filin
- */
-
 class editorController {
 
-  constructor(state, action, _drawFrame){
-        this.state = state;
-        this.action = action;
-        this.drawFrame = _drawFrame;
+  constructor(state, action, _drawFrame) {
+    this.state = state;
+    this.action = action;
+    this.drawFrame = _drawFrame;
   }
 
-  saveRange(){
+  setTypeCursor() {
+    const typeCursor = this.action.typeCursor;
+    return this.drawFrame({
+      typeCursor: {
+        $set: typeCursor
+      }
+    });
+  }
+
+  deleteRange() {
+    return this.drawFrame({
+      range: {
+        $set: {}
+      },
+      elem: {
+        $set: ''
+      }
+    });
+  }
+
+  saveRange() {
     const containerEl = this.action.elem;
-    let range, start;
+    let range = null,
+      preSelectionRange = {};
 
     if (window.getSelection && document.createRange) {
-      range = window.getSelection().getRangeAt(0);
-      var preSelectionRange = range.cloneRange();
-      preSelectionRange.selectNodeContents(containerEl);
-      preSelectionRange.setEnd(range.startContainer, range.startOffset);
-      start = preSelectionRange.toString().length;
-    }else if (document.selection && document.body.createTextRange) {
+      if (window.getSelection() && window.getSelection().getRangeAt(0)) {
+        range = window.getSelection().getRangeAt(0);
+        preSelectionRange = range.cloneRange();
+      }
+    } else if (document.selection && document.body.createTextRange) {
       range = document.selection.createRange();
-      var preSelectionTextRange = document.body.createTextRange();
-      preSelectionTextRange.moveToElementText(containerEl);
-      preSelectionTextRange.setEndPoint('EndToStart', range);
-      start = preSelectionTextRange.text.length;
+      preSelectionRange = document.body.createTextRange();
     }
 
     return this.drawFrame({
       range: {
-        $set: {
-          start: start,
-          end: start + range.toString().length
-        }
+        $set: preSelectionRange
       },
-      elem:{
+      elem: {
         $set: containerEl.dataset.reactid
       }
     });
   }
-  getRange(){
+
+  getRange() {
     return this.state.range;
   }
-  saveElem(){
+
+  saveElem() {
     return this.drawFrame({
-      elem:{
+      elem: {
         $set: this.action.elem.dataset.reactid
       }
     });
   }
-  getElem(){
+
+  getElem() {
     const id = this.state.elem;
-    return document.querySelector('[data-reactid="'+id+'"]');
+    return document.querySelector('[data-reactid="' + id + '"]');
   }
 
-  restoreRange(){
+  restoreRange() {
     const containerEl = this.state.elem;
     const savedSel = this.state.saveRange;
 
@@ -88,7 +101,7 @@ class editorController {
       var sel = window.getSelection();
       sel.removeAllRanges();
       sel.addRange(range);
-    }else if (document.selection && document.body.createTextRange) {
+    } else if (document.selection && document.body.createTextRange) {
       var textRange = document.body.createTextRange();
       textRange.moveToElementText(containerEl);
       textRange.collapse(true);

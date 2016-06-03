@@ -1,7 +1,3 @@
-/**
- * @author Anton.Filin
- */
-
 class bodyColorController {
 
   constructor(state, action, _drawFrame) {
@@ -20,8 +16,6 @@ class bodyColorController {
       }
     });
   }
-
-
 }
 
 export default bodyColorController;

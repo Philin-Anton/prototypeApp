@@ -6,7 +6,7 @@
 import * as types from '../constants/ActionTypes';
 
 
-const changeForSalesUnsafe = () =>{
+const changeForSalesUnsafe = () => {
   return {
     type: types.CHANGE_FOR_SALES
   }
@@ -14,7 +14,7 @@ const changeForSalesUnsafe = () =>{
 
 export const changeForSales = () => {
   return (dispatch)=> {
-      dispatch(changeForSalesUnsafe());
+    dispatch(changeForSalesUnsafe());
   }
 };
 

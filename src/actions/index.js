@@ -10,6 +10,8 @@ import * as ActionWidgetForSales from './ActionWidgetForSales';
 import * as ActionWidgetBodyColor from './ActionWidgetBodyColor';
 import * as ActionWidgetList from './ActionWidgetList';
 import * as ActionRichEditor from './ActionRichEditor';
+import * as ActionPopUpBlock from './ActionPopUpBlock';
+import * as ActionArrayImageBlob from './ActionArrayImageBlob';
 
 export const actionWidgetTag = ( () => {
   return ActionWidgetTag;
@@ -38,5 +40,13 @@ export const actionWidgetBodyColor = ( () => {
 })();
 export const actionRichEditor = ( () => {
   return ActionRichEditor;
+})();
+
+export const actionPopUpBlock = ( () => {
+  return ActionPopUpBlock;
+})();
+
+export const actionArrayImageBlob = ( () => {
+  return ActionArrayImageBlob;
 })();
 

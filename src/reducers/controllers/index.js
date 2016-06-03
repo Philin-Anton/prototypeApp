@@ -1,6 +1,3 @@
-/**
- * @author Anton.Filin
- */
 
 import _tagController from './tagController'
 import _forSalesController from './forSalesController'
@@ -9,6 +6,8 @@ import _bodyColorController from './bodyColorController'
 import _listBlockController from './listBlockController'
 import _blockController from './blockController'
 import _editorController from './editorController'
+import _popUpController from './popUpController'
+import _arrayImageBlobController from './arrayImageBlobController'
 
 
 export const tagController = (state, action, _drawFrame) => {
@@ -36,4 +35,10 @@ export const blockController = (state, action, _drawFrame) => {
 };
 export const editorController = (state, action, _drawFrame) => {
   return  new _editorController( state, action, _drawFrame);
+};
+export const popUpController = (state, action, _drawFrame) => {
+  return  new _popUpController( state, action, _drawFrame);
+};
+export const arrayImageBlobController = (state, action, _drawFrame) => {
+  return  new _arrayImageBlobController( state, action, _drawFrame);
 };

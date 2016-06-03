@@ -8,7 +8,7 @@ import { createSelector } from 'reselect'
 
 require('styles/editor/RichEditor.scss');
 
-
+import {drawFrame, throttle} from '../../api/maggo';
 import { actionRichEditor, actionWidgetBlock } from '../../actions/index';
 
 const saveRange = actionRichEditor.saveRange;
@@ -22,152 +22,95 @@ class RichEditorComponent extends React.Component {
     this.state = {
       html: props.html || '<p><br/></p>'
     };
-  }
-  whichTag(tagName){
-    var sel, containerNode;
-    tagName = tagName.toUpperCase();
-    if (window.getSelection) {
-      sel = window.getSelection();
-      if (sel.rangeCount > 0) {
-        containerNode = sel.getRangeAt(0).commonAncestorContainer;
-      }
-    }else if( (sel = document.selection) && sel.type != 'Control' ) {
-      containerNode = sel.createRange().parentElement();
-    }
-    while (containerNode) {
-      if (containerNode.nodeType == 1 && containerNode.tagName == tagName) {
-        return true;
-      }
-      containerNode = containerNode.parentNode;
-    }
-    return false;
-  }
-  controlNavBar(){
-    const refs =  this.refs;
-    ReactDOM.findDOMNode(refs.editor).focus();
 
-    const {Text} =  this.refs;
-    let inlineState = [];
-    for(var item in refs){
-      if (item == 'editor') continue;
-      var obj = refs[item];
-      let html = ReactDOM.findDOMNode(obj);
-      //window.console.log(item);
-      if(document.queryCommandState(item)){
-        html.className = html.className.replace(/active/g, '');
-        html.className = html.className + ' active'
-      }else{
-        if(item == 'Bold' || item == 'Italic' || item == 'Underline'){
-          inlineState.push(item);
-        }
-        html.className = html.className.replace(/active/g, '');
-      }
-    }
-    let html = ReactDOM.findDOMNode(Text);
-    if(inlineState.length > 2){
-      html.className = html.className.replace(/active/g, '');
-      html.className = html.className + ' active'
-    }else{
-      html.className = html.className.replace(/active/g, '');
-    }
+    this.drawFrame = drawFrame(this.state);
+
+    this.saveRange = throttle(this.saveRange, 100);
   }
+
   reFormatBlock(e){
     if (e.keyCode === 13) {
-
-      if(this.whichTag('FIGURE')){
-        window.setTimeout(this.removeChild.bind(this));
-        return false;
-      }else{
-        document.execCommand('formatblock',false,'P');
+      const NodeName = this.props.editorBlock.range.commonAncestorContainer.parentNode.nodeName;
+      //debugger;
+      switch(NodeName){
+        case 'DIV':
+          document.execCommand('formatBlock',null, 'P');
+          document.execCommand( 'justifyFull' );
+        break;
+        case 'H1':
+          document.execCommand('formatBlock',null, 'H1');
+          document.execCommand( 'justifyCenter' );
+          break;
+        case 'P':
+          document.execCommand('formatBlock',null, 'P');
+              break;
+        case 'BLOCKQUOTE':
+          document.execCommand('formatBlock',null, 'BLOCKQUOTE');
+              break;
       }
+
     }
-    if (e.keyCode == 37) window.setTimeout(this.controlNavBar.bind(this));
-    if (e.keyCode == 38) window.setTimeout(this.controlNavBar.bind(this));
-    if (e.keyCode == 39) window.setTimeout(this.controlNavBar.bind(this));
-    if (e.keyCode == 40) window.setTimeout(this.controlNavBar.bind(this));
-  }
-  removeChild(){
-    var range = window.getSelection().getRangeAt(0);
-    var element = range.commonAncestorContainer;
-    var elementPrev = element.previousElementSibling;
-    switch (element.nodeName){
-      case 'FIGURE':
-        // window.console.dir(element.previousElementSibling, 'element');
-        element.parentElement.removeChild(element);
-    }
-
-    document.execCommand('formatblock',false,'P');
-
-    this.moveToEnd(elementPrev.nextElementSibling);
-
-    //this.moveToEnd(window.getSelection().getRangeAt(0));
+    if (e.keyCode == 37) window.setTimeout(this.saveRange.bind(this));
+    if (e.keyCode == 38) window.setTimeout(this.saveRange.bind(this));
+    if (e.keyCode == 39) window.setTimeout(this.saveRange.bind(this));
+    if (e.keyCode == 40) window.setTimeout(this.saveRange.bind(this));
   }
 
-
-  moveToEnd(element) {
-    var range = document.createRange();
-    var sel = window.getSelection();
-
-    try{
-      range.setStart(element.lastChild, element.lastChild.textContent.length);
-    }catch(e){
-      range.setStart(element.lastChild.lastChild, element.lastChild.textContent.length);
-    }
-
-    range.collapse(true);
-    sel.removeAllRanges();
-    sel.addRange(range);
-  }
-
-  onMouseDown(){
-    //e.preventDefault();
+  saveRange(){
+    var editor =  ReactDOM.findDOMNode(this.refs.editor);
+    const {saveRange} = this.props;
+    saveRange(editor);
   }
   onClick(){
     var editor =  ReactDOM.findDOMNode(this.refs.editor);
     editor.focus();
-    //const {saveRange} = this.props;
-    //saveRange(editor);
-  }
-  onMouseUp(){
-
+    this.saveRange()
   }
 
   onKeyDown(e){
     this.reFormatBlock.call(this, e)
   }
 
-  onInput(e){
-    const {/*saveRange,*/ addHtml, id} = this.props;
-    //var editor =  ReactDOM.findDOMNode(this.refs.editor);
-    //saveRange(editor);
-
-    addHtml(id, e.target.innerHTML);
+  emitChange(){
+    const {saveRange, addHtml, id} = this.props;
+    var editor =  ReactDOM.findDOMNode(this.refs.editor);
+    saveRange(editor);
+    var html = editor.innerHTML;
+    if (addHtml && html !== this.lastHtml) {
+      addHtml(id, html);
+    }
+    this.lastHtml = html;
   }
+  //componentWillMount(){
+  //  //document.removeEventListener('touchstart, touchend, touchmove', this._saveRange.bind(this));
+  //}
+  //componentWillUpdate(){
+  //  //document.removeEventListener('touchstart, touchend, touchmove', this._saveRange.bind(this));
+  //}
   render() {
     const { html } = this.props;
     return (
       <div className="richeditor-сomponent">
         <div contentEditable="true" className="editor" ref="editor"
-             onMouseDown={this.onMouseDown.bind(this)}
-             onClick={this.onClick.bind(this)}
-             onMouseUp={this.onMouseUp.bind(this)}
-             onInput={this.onInput.bind(this)}
+             onClick={this.onClick.bind(this, 'onClick')}
+             onInput={this.emitChange.bind(this)}
+             onBlur={this.emitChange.bind(this)}
              onKeyDown={this.onKeyDown.bind(this)}
              dangerouslySetInnerHTML={{ __html: html }} />
       </div>
     );
   }
 
-  componentDidMount(){
-    //var editor =  ReactDOM.findDOMNode(this.refs.editor);
-    //const {editorBlock, restoreRange} = this.props;
-    //const {range} = editorBlock;
-    //restoreRange(editor, range)
+  shouldComponentUpdate(nextProps){
+    return nextProps.html !== ReactDOM.findDOMNode(this.refs.editor).innerHTML;
   }
-
+  //componentDidMount(){
+  //  //document.addEventListener('touchstart, touchend, touchmove', this._saveRange.bind(this));
+  //}
+  //componentDidUpdate(){
+  //  //.addEventListener('touchstart, touchend, touchmove', this._saveRange.bind(this));
+  //}
 }
-
-
 
 RichEditorComponent.displayName = 'EditorRichEditorComponent';
 

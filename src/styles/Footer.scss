@@ -1,5 +1,9 @@
 .footer-component {
+  border-top: 1px solid #fff;
   position: fixed;
+  z-index: 20;
+  left: 0;
+  right: 0;
   bottom: 0;
-  width: 100%;
 }
+

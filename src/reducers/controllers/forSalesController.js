@@ -1,6 +1,3 @@
-/**
- * @author Anton.Filin
- */
 
 class forSalesController {
 

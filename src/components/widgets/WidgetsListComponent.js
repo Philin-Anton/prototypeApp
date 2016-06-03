@@ -1,19 +1,23 @@
 'use strict';
 
 import React from 'react';
-//import update from 'react/lib/update';
-import { DragDropContext } from 'react-dnd';
-import HTML5Backend from 'react-dnd-html5-backend';
 import { connect } from 'react-redux'
 import { createSelector } from 'reselect'
 
-import {drawFrame} from '../../api/maggo';
+
+import {drawFrame, getElem, getIndex,  getDefaultManager} from '../../api/maggo';
 
 import WidgetBlock from './WidgetBlockComponent';
-import { actionWidgetList } from '../../actions/index';
-const addWidgetBlock = actionWidgetList.addWidgetBlock;
+import { actionWidgetList, actionPopUpBlock, actionRichEditor } from '../../actions/index';
+const checkWidgetBlock = actionWidgetList.checkWidgetBlock;
 const deleteWidgetBlock = actionWidgetList.deleteWidgetBlock;
 const reorderWidgetBlock = actionWidgetList.reorderWidgetBlock;
+
+const openPopUp = actionPopUpBlock.openPopUp;
+const changeStepPopUp = actionPopUpBlock.changeStepPopUp;
+const changeTitlePopUp = actionPopUpBlock.changeTitlePopUp;
+
+const saveRange = actionRichEditor.saveRange;
 
 require('styles/widgets/WidgetsList.scss');
 
@@ -29,81 +33,47 @@ class WidgetsListComponent extends React.Component {
   }
 
   widgetsListMove(id, afterId) {
-
-    const widgetsByIndex = this.props.widgetsByIndex;
-
-    const widget = widgetsByIndex.filter(item => {
-      return item.id == id
-    })[0];
-
-    const afterWidget = widgetsByIndex.filter(item => {
-      return item.id == afterId
-    })[0];
-
-    const widgetIndex = widgetsByIndex.findIndex(item => {
-      return JSON.stringify(item) == JSON.stringify(widget);
-    });
-
-    var afterIndex = widgetsByIndex.findIndex(item => {
-      return JSON.stringify(item) == JSON.stringify(afterWidget);
-    });
+    const widgetsByIndex = this.props.widgetBlocks.widgetsByIndex;
+    const widget = getElem(widgetsByIndex, id);
+    const afterWidget = getElem(widgetsByIndex, afterId);
+    const widgetIndex = getIndex(widgetsByIndex, widget);
+    const afterIndex = getIndex(widgetsByIndex, afterWidget);
 
     this.props.reorderWidgetBlock(widgetIndex, afterIndex, widget );
-
-  }
-  componentWillUnmount() {
-    cancelAnimationFrame(this.requestedFrame);
   }
 
-  addWidget() {
-
-    const {widgetsById/*, widgetsByIndex*/} = this.props;
-
-    const newWidgets = {
-      id: Object.keys(widgetsById).length,
-      html:''
-    };
-
-    widgetsById[newWidgets.id] = newWidgets;
-
-    this.props.addWidgetBlock(widgetsById, newWidgets);
-
-  }
-  widgetsCheck(id){
-    const nextState = this.drawFrame({
-      widgetsCheck:{
-        $set: {
-          id: id
-        }
-      }
-    });
-    this.setState(nextState)
+  widgetsCheck(elem){
+    this.props.checkWidgetBlock(elem);
   }
 
   render() {
-    const {widgetsByIndex } = this.props;
+    const {widgetBlocks, editorBlock, deleteWidgetBlock, openPopUp, changeStepPopUp, changeTitlePopUp, saveRange} = this.props;
+    const {widgetsByIndex, checkWidget} = widgetBlocks;
+    const {range} = editorBlock;
     return (
-      <div className={'widgetslist-component ' }>
+      <div className={'widgetslist-component '}>
         {
           widgetsByIndex.map(widget => {
-            window.console.log(widgetsByIndex, 'widgetsByIndex');
-            window.console.log(widget, 'widget');
             return(
               <WidgetBlock
                 key={widget.id}
                 id={widget.id}
-                html={widget.html ||'<p><br/></p>'}
+                type={widget.type}
+                html={widget.html}
                 widgetsListMove={this.widgetsListMove.bind(this)}
                 widgetsCheck={this.widgetsCheck.bind(this)}
-                getWidgetsCheck = {this.state.widgetsCheck}
                 getWidgetElem = {widget}
+                getCheckWidget = {checkWidget}
+                deleteWidgetBlock = {deleteWidgetBlock}
+                openPopUp = {openPopUp}
+                changeStepPopUp = {changeStepPopUp}
+                changeTitlePopUp = {changeTitlePopUp}
+                changeTitlePopUp = {changeTitlePopUp}
+                range = {range}
+                saveRange = {saveRange}
                 />
             )})
-
         }
-        <div onClick={this.addWidget.bind(this)}>
-          Add Widget
-        </div>
       </div>
     )
   }
@@ -115,10 +85,13 @@ WidgetsListComponent.displayName = 'WidgetsWidgetsListComponent';
 // WidgetsListComponent.propTypes = {};
 // WidgetsListComponent.defaultProps = {};
 
-const getAllState = state => state.WidgetBlocks;
+const getWidgetBlocksState = state => state.WidgetBlocks;
+const getEditorBlockState = state => state.EditorBlock;
 
-const select = createSelector([getAllState], state => {
-  return state;
+const select = createSelector([getWidgetBlocksState, getEditorBlockState], (widgetBlocks, editorBlock) => {
+  return {widgetBlocks, editorBlock};
 });
 
-export default connect(select, {addWidgetBlock, reorderWidgetBlock, deleteWidgetBlock})(DragDropContext(HTML5Backend)(WidgetsListComponent));
+export default connect(select,
+  {checkWidgetBlock, reorderWidgetBlock, deleteWidgetBlock, openPopUp, changeStepPopUp, changeTitlePopUp, saveRange}
+)(getDefaultManager()(WidgetsListComponent));

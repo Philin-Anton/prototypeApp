@@ -16,6 +16,17 @@ export const saveRange = (elem) => {
     dispatch(saveRangeUnsafe(elem));
   }
 };
+const deleteRangeUnsafe = ()=> {
+  return {
+    type: types.DELETE_RANGE
+  }
+};
+
+export const deleteRange = (elem) => {
+  return (dispatch)=> {
+    dispatch(deleteRangeUnsafe(elem));
+  }
+};
 
 const getRangeUnsafe = ()=> {
   return {
@@ -56,6 +67,18 @@ const saveElemUnsafe = (elem)=> {
 export const saveElem = (elem) => {
   return (dispatch)=> {
     dispatch(saveElemUnsafe(elem));
+  }
+};
+const setTypeCursorUnsafe = (typeCursor)=> {
+  return {
+    type: types.SET_TYPE_CURSOR,
+    typeCursor
+  }
+};
+
+export const setTypeCursor = (typeCursor) => {
+  return (dispatch)=> {
+    dispatch(setTypeCursorUnsafe(typeCursor));
   }
 };
 

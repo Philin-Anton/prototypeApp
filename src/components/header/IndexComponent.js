@@ -1,15 +1,9 @@
 'use strict';
 
 import React from 'react';
-
-
-import TagComponent from './TagComponent';
-import BodyColor from './BodyColorComponent';
-import ItemForSales from './ItemForSalesComponent';
-import Title from './TitleComponent';
-
-
-const maggoLogo = require('../../images/maggoLogo.png');
+import MoreMenu from './MoreMenuComponent';
+import {md} from '../../api/maggo';
+const headerImg = require('../../images/header.jpg');
 
 require('styles/header/Index.scss');
 
@@ -17,20 +11,14 @@ class IndexComponent extends React.Component {
   render() {
     return (
       <header className="index-component">
-
         <div className="topPlace">
-          <img src={maggoLogo} alt=""/>
+          <img src={headerImg} alt=""/>
         </div>
-
-        <h2>Edit Article</h2>
-
-        <div className="header-control">
-          <TagComponent />
-          <BodyColor />
-          <ItemForSales />
-        </div>
-
-        <Title />
+        {
+          !(md.mobile()|| md.phone() || md.tablet())?
+            <MoreMenu/>
+            : null
+        }
 
       </header>
     );

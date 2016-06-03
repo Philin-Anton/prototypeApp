@@ -6,17 +6,42 @@
 
 import * as types from '../constants/ActionTypes';
 
-const addWidgetBlockUnsafe = (id, block)=> {
+const checkWidgetBlockUnsafe = (elem)=> {
   return {
-    type: types.ADD_WIDGET_BLOCKS,
-    id,
-    block
+    type: types.CHECK_WIDGET_BLOCKS,
+    elem
   }
 };
 
-export const addWidgetBlock = (id, block) => {
+export const checkWidgetBlock = (elem) => {
   return (dispatch)=> {
-    dispatch(addWidgetBlockUnsafe(id, block));
+    dispatch(checkWidgetBlockUnsafe(elem));
+  }
+};
+
+const setWidgetBlockUnsafe = (array)=> {
+  return {
+    type: types.SET_WIDGET_BLOCKS,
+    array
+  }
+};
+
+export const setWidgetBlock = (array) => {
+  return (dispatch)=> {
+    dispatch(setWidgetBlockUnsafe(array));
+  }
+};
+
+const addWidgetBlockUnsafe = (content)=> {
+  return {
+    type: types.ADD_WIDGET_BLOCKS,
+    content
+  }
+};
+
+export const addWidgetBlock = (content) => {
+  return (dispatch)=> {
+    dispatch(addWidgetBlockUnsafe(content));
   }
 };
 
@@ -44,5 +69,18 @@ const deleteWidgetBlockUnsafe = (id)=> {
 export const deleteWidgetBlock = (id) => {
   return (dispatch)=> {
     dispatch(deleteWidgetBlockUnsafe(id));
+  }
+};
+
+const updateWidgetBlockUnsafe = (newBlock)=> {
+  return {
+    type: types.UPDATE_WIDGET_BLOCKS,
+    newBlock
+  }
+};
+
+export const updateWidgetBlock = (newBlock) => {
+  return (dispatch)=> {
+    dispatch(updateWidgetBlockUnsafe(newBlock));
   }
 };

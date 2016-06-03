@@ -1,5 +1,7 @@
+require('styles/CustomIcons.scss');
+require('styles/Main.scss');
 //equire('normalize.css');
-require('styles/App.css');
+require('styles/App.scss');
 import React from 'react';
 import { Router, Route, useRouterHistory } from 'react-router'
 import { createHashHistory } from 'history'
@@ -19,22 +21,7 @@ class AppComponent extends React.Component {
     super(props, context);
   }
 
-  static getContent(){
-
-    return store.getState();
-  }
-
-  static setContent(json, callBack){
-    window.console.log(window.JSON.stringify(json) + ' setContent');
-
-    if(typeof callBack === 'function'){
-      return callBack.call(this);
-    }
-    return true;
-  }
-
   render() {
-
     return(
       <Provider store={store}>
         <Router history={appHistory}>

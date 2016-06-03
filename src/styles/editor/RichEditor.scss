@@ -1,11 +1,11 @@
 .richeditor-сomponent {
   cursor: auto;
-  .editor{
-    min-height: 300px;
+  .editor {
+    min-height: 0;
     overflow: hidden;
   }
-  input[type="button"]{
-    &.active{
+  input[type="button"] {
+    &.active {
       background: red;
     }
   }

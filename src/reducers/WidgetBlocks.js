@@ -1,22 +1,19 @@
-/**
- * Created by Anton.Filin on 23.03.2016.
- */
-
 import * as types from '../constants/ActionTypes';
-import {drawFrame, getLocalStore, setLocalStore} from '../api/maggo';
-import {tagController, forSalesController, titleController, bodyColorController, listBlockController, blockController } from './controllers/index';
+import {drawFrame, setContent} from '../api/maggo';
+import {handleInit} from '../api/handlers';
+import {tagController, forSalesController, titleController, bodyColorController, listBlockController, blockController, arrayImageBlobController } from './controllers/index';
 
 
-const InitState = getLocalStore() || {
-  widgetsById:{},
+const content =  handleInit() ? setContent(handleInit()) : false;
+
+const InitState = content || {
   widgetsByIndex:[],
   title: '',
-  tags:[],
+  tags: '',
   bodyColor: {
-    id: 0,
-    value: '#e10c0c'
+    id: 57
   },
-  forSales: false
+  arrayImage:[]
 };
 
 function WidgetBlocks(state = InitState, action){
@@ -28,6 +25,7 @@ function WidgetBlocks(state = InitState, action){
   const _bodyColorController = bodyColorController(state, action, _drawFrame);
   const _listBlockController = listBlockController(state, action, _drawFrame);
   const _blockController = blockController(state, action, _drawFrame);
+  const _arrayImageBlobController = arrayImageBlobController(state, action, _drawFrame);
 
   const inspection = function(){
     switch (action.type) {
@@ -37,17 +35,20 @@ function WidgetBlocks(state = InitState, action){
       case types.ADD_WIDGET_BLOCKS:
         return _listBlockController.addBlocks();
 
+      case types.CHECK_WIDGET_BLOCKS:
+        return _listBlockController.checkBlock();
+
+      case types.UPDATE_WIDGET_BLOCKS:
+        return _listBlockController.updateBlock();
+
       case types.REMOVE_WIDGET_BLOCKS:
         return _listBlockController.deleteBlocks();
 
-      case types.GET_TAGS:
-        return _tagController.getTags();
+      case types.SET_WIDGET_BLOCKS:
+        return _listBlockController.setWidgetBlock();
 
       case types.ADD_TAG:
         return _tagController.addTag();
-
-      case types.DELETE_TAG:
-        return _tagController.deleteTag();
 
       case types.CHANGE_FOR_SALES:
         return _forSalesController.changeForSales();
@@ -64,14 +65,24 @@ function WidgetBlocks(state = InitState, action){
       case types.ADD_HTML:
         return _blockController.addHtml();
 
+      case types.DELETE_ARRAY_IMAGE:
+        return _arrayImageBlobController.deleteArrayImage();
+
+      case types.ADD_ARRAY_IMAGE:
+        return _arrayImageBlobController.addArrayImage();
+
+      case types.UPDATE_ARRAY_IMAGE:
+        return _arrayImageBlobController.updateArrayImage();
+
+      case types.SET_ARRAY_IMAGE:
+        return _arrayImageBlobController.setArrayImage();
+
       default:
         return state;
     }
   };
 
-  const returnState = inspection();
-  setLocalStore(returnState);
-  return returnState
+  return inspection()
 
 
 }

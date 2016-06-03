@@ -1,50 +1,45 @@
-/**
- * @author Anton.Filin
- */
+import {getElem, getIndex} from '../../api/maggo';
 
 class listController {
 
-  constructor(state, action, _drawFrame){
-        this.state = state;
-        this.action = action;
-        this.drawFrame = _drawFrame;
+  constructor(state, action, _drawFrame) {
+    this.state = state;
+    this.action = action;
+    this.drawFrame = _drawFrame;
   }
 
-  deleteBlocks(){
-    const tags = this.state.tags;
-
-    const elem = tags.filter(item => {
-      return item.id == this.action.id
-    })[0];
-
-    const index = tags.findIndex(item => {
-      return JSON.stringify(item) == JSON.stringify(elem);
+  setWidgetBlock() {
+    return this.drawFrame({
+      widgetsByIndex: {
+        $set: this.action.array
+      }
     });
+  }
+
+  deleteBlocks() {
+    const widgetsByIndex = this.state.widgetsByIndex;
+
+    const elem = getElem(widgetsByIndex, this.action.id);
+    const index = getIndex(widgetsByIndex, elem);
 
     return this.drawFrame({
-      tags: {
+      widgetsByIndex: {
         $splice: [[index, 1]]
       }
     });
   }
-  addBlocks(){
-    const newTAG = {
-      id: this.action.id,
-      block: this.action.block
-    };
 
+  addBlocks() {
     return this.drawFrame({
-        widgetsById: {
-          $set: newTAG.id
-        },
-        widgetsByIndex: {
-          $push: [
-            newTAG.block
-          ]
-        }
+      widgetsByIndex: {
+        $push: [
+          this.action.content
+        ]
+      }
     });
   }
-  reorderBlocks(){
+
+  reorderBlocks() {
     return this.drawFrame({
       widgetsByIndex: {
         $splice: [
@@ -53,8 +48,28 @@ class listController {
         ]
       }
     });
+  }
 
-    //return this.state.getState();
+  checkBlock() {
+    return this.drawFrame({
+      checkWidget: {
+        $set: this.action.elem
+      }
+    });
+  }
+
+  updateBlock() {
+    const widgetsByIndex = this.state.widgetsByIndex;
+    const elem = getElem(widgetsByIndex, this.action.newBlock.id);
+    const index = getIndex(widgetsByIndex, elem);
+
+    return this.drawFrame({
+      widgetsByIndex: {
+        $splice: [
+          [index, 1, this.action.newBlock]
+        ]
+      }
+    });
   }
 
 }
