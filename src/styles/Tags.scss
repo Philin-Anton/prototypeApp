@@ -1,0 +1,120 @@
+.tags-component {
+  padding: 30px;
+  color: inherit;
+  overflow: hidden;
+  border-top: 1px solid #c6c3c2;
+  font-size: 12px;
+  div.ReactTags__tags {
+    position: relative;
+  }
+
+  div.ReactTags__tagInput {
+    width: 200px;
+    border-radius: 2px;
+    display: inline-block;
+  }
+  div.ReactTags__tagInput input {
+    height: auto;
+    line-height: normal;
+    margin: 0;
+    width: 100%;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font-size: inherit;
+    text-indent: 10px;
+    &::-webkit-input-placeholder {
+      opacity: 1;
+    }
+    &::-moz-placeholder {
+      opacity: 1;
+    }
+    &:-moz-placeholder {
+      opacity: 1;
+    }
+    &:-ms-input-placeholder {
+      opacity: 1;
+    }
+    &:focus {
+      border: 0;
+      box-shadow: none;
+      outline: none;
+    }
+  }
+
+  div.ReactTags__selected {
+    float: left;
+  }
+  div.ReactTags__selected span.ReactTags__tag {
+    position: relative;
+    display: inline-block;
+    margin: 5px 5px;
+    cursor: default;
+    color: inherit;
+    &:hover a.ReactTags__remove {
+      display: block;
+    }
+  }
+  div.ReactTags__selected a.ReactTags__remove {
+    display: none;
+    position: absolute;
+    left: 50%;
+    top: -32px;
+    color: inherit;
+    margin-left: -14px;
+    padding: 5px 0;
+    width: 28px;
+    text-align: center;
+    background-color: #231f20;
+    cursor: pointer;
+    font-size: 0;
+    &:before {
+      font-size: 13px;
+      display: block;
+      font-family: 'Glyphicons Halflings';
+      content: "\E020";
+    }
+    &:after {
+      position: absolute;
+      bottom: -3px;
+      left: 50%;
+      content: "";
+      width: 0;
+      height: 0;
+      margin-left: -3px;
+      border-left: 3px solid transparent;
+      border-right: 3px solid transparent;
+      border-top: 4px solid #231f20;
+    }
+    &:hover {
+      text-decoration: none;
+    }
+  }
+
+  div.ReactTags__suggestions {
+    position: absolute;
+  }
+  div.ReactTags__suggestions ul {
+    list-style-type: none;
+    box-shadow: .05em .01em .5em rgba(0,0,0,.2);
+    background: white;
+    width: 200px;
+  }
+  div.ReactTags__suggestions li {
+    border-bottom: 1px solid #ddd;
+    padding: 5px 10px;
+    margin: 0;
+  }
+  div.ReactTags__suggestions li mark {
+    text-decoration: underline;
+    background: none;
+    font-weight: 600;
+  }
+  div.ReactTags__suggestions ul li.active {
+    background: #b7cfe0;
+    cursor: pointer;
+  }
+  @media only screen and (min-width: 768px) {
+
+  }
+}

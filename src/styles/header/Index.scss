@@ -1,0 +1,15 @@
+.index-component {
+  color: inherit;
+  text-align: center;
+  .topPlace {
+    background: #222;
+    img {
+      vertical-align: middle;
+      max-width: 100%;
+    }
+  }
+  .header-control {
+    display: flex;
+  }
+
+}

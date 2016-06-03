@@ -1,0 +1,112 @@
+.controlwidgets-component {
+  background: #333333;
+  color: #fff;
+  cursor: default;
+  .background-popup-more{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    cursor: pointer;
+  }
+
+  .glyphicon {
+    font-size: 30px;
+    cursor: pointer;
+    &:hover {
+      color: #b1b1b1;
+    }
+  }
+  .bottom-control{
+    &.active{
+      background-color: #1d1d1d;
+    }
+  }
+  .bottom-control {
+    display: inline-block;
+    position: relative;
+    input {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      left: 0;
+      top: 0;
+      border: 0;
+      opacity: 0;
+      cursor: pointer;
+      padding: 0;
+      margin: 0;
+    }
+  }
+  .rememberBaseMenu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+  }
+  .hrmenu-component,
+  .imagemenu-component {
+    position: relative;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .bottom-control {
+      cursor: pointer;
+      width: 100px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      &.active, &:hover {
+        color: #b1b1b1;
+        background: #222;
+      }
+    }
+  }
+}
+
+.imagemenu-component,
+.basemenu-component,
+.textmenu-component {
+  position: relative;
+  z-index: 1;
+  .fix-wrapper {
+    display: flex;
+    &.isCheck-line{
+      cursor: pointer;
+      & > *{
+        z-index: -1;
+      }
+    }
+    & > * {
+      flex: 100% 1 1;
+      text-align: center;
+      cursor: pointer;
+    }
+    .bottom-control {
+      height: 56px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      &:active {
+        background-color: black;
+      }
+    }
+  }
+  @media only screen and (min-width: 992px) {
+    .fix-wrapper {
+      .bottom-control {
+        height: 76px;
+        &:hover {
+          background-color: black;
+        }
+      }
+    }
+  }
+}
+

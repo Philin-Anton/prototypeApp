@@ -1,0 +1,11 @@
+.imageblock-component {
+  img {
+    max-width: 282px;
+    width: 100%;
+  }
+  &:after {
+    content: " ";
+    clear: both;
+    display: table;
+  }
+}

@@ -1,0 +1,38 @@
+// Custom icons.
+$icon-size-mobile: 40px;
+$icon-size-desk: 60px;
+
+.custom-icon {
+  display: inline-block;
+  width: $icon-size-mobile;
+  height: $icon-size-mobile;
+  background: url(../images/icons/icons-custom-mobile.png) no-repeat;
+  background-size: 531px 40px;
+}
+
+.custom-icon-blockquote {
+  width: $icon-size-mobile + 11;
+}
+
+$icon-types: 'palitra', 'divider', 'image', 'font', 'align-justify', 'title', 'figcaption', 'align-left', 'align-center', 'align-right', 'edit', 'more', 'blockquote';
+
+@for $i from 1 through length($icon-types) {
+  .custom-icon-#{nth($icon-types, $i)} {
+    background-position: #{($i - 1) * -$icon-size-mobile} 0;
+    @media only screen and (min-width: 768px) {
+      background-position: #{($i - 1) * -$icon-size-desk} 0;
+    }
+  }
+}
+
+@media only screen and (min-width: 768px) {
+  .custom-icon {
+    width: $icon-size-desk;
+    height: $icon-size-desk;
+    background-image: url(../images/icons/icons-custom-desk.png);
+    background-size: 802px 60px;
+  }
+  .custom-icon-blockquote {
+    width: $icon-size-desk + 22;
+  }
+}

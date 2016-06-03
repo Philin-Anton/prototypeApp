@@ -1,0 +1,32 @@
+.more-component {
+  border-bottom: 2px solid #464342;
+  position: relative;
+  z-index: 10;
+  ul {
+    margin: 0 auto;
+    max-width: 200px;
+    padding: 0 10px;
+    li {
+      vertical-align: top;
+      padding: 15px 0 15px 60px;
+      list-style: none;
+      font-size: 16px;
+      line-height: 1;
+      white-space: nowrap;
+      cursor: pointer;
+      span {
+        display: inline-block;
+        vertical-align: top;
+        &.action-icon {
+          margin-right: 12px;
+          & + span {
+            margin-top: 5px;
+          }
+        }
+      }
+      &:not(:last-child) {
+        border-bottom: 1px solid #464342;
+      }
+    }
+  }
+}

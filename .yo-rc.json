@@ -1,0 +1,7 @@
+{
+  "generator-react-webpack": {
+    "appName": "testApp",
+    "style": "scss",
+    "postcss": true
+  }
+}

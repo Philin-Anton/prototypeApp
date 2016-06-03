@@ -1,0 +1,27 @@
+// Actions icons.
+$icon-size: 24px;
+
+.action-icon {
+  display: inline-block;
+  width: $icon-size;
+  height: $icon-size;
+  background: url(../images/icons/icons-actions-mobile.png) no-repeat;
+  background-size: 96px 48px;
+}
+
+$icon-types: 'save', 'publish', 'remove', 'close';
+
+@for $i from 1 through length($icon-types) {
+  .action-icon-#{nth($icon-types, $i)} {
+    background-position: #{($i - 1) * -$icon-size} 0;
+    &.icon-style-dark {
+      background-position: (#{($i - 1) * -$icon-size}) (-$icon-size);
+    }
+  }
+}
+
+@media only screen and (min-width: 768px) {
+  .action-icon {
+    background-image: url(../images/icons/icons-actions-desk.png);
+  }
+}

@@ -1,0 +1,66 @@
+@import "./importStyle/importStyle.css";
+
+.homecontainer-component {
+  background: #fff;
+  //max-width: 1024px;
+  margin: auto;
+  .homecontainer-component-content {
+    margin-bottom: 76px;
+  }
+  .rememberBaseMenu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+  }
+}
+
+$colors: #e10c0c, #ff3232, #fe8181, #cc9933, #facd73, #f3eb92, #27bbf1, #81d6f7, #a3fffb,
+#ac2a4d, #ff3399, #f3cad2, #ffa500, #ffcc00, #f9e257, #2e32ea, #336699, #c1cbe8,
+#e717c7, #ef5ba8, #f6ebeb, #eeb73e, #f6df77, #f2e8cd, #243f78, #88bff7, #e7f2fd,
+#a53976, #c25d96, #db8eba, #6b8f23, #9acd32, #cce698, #b24700, #cc5200, #e55b00,
+#5a43c0, #8b7bd2, #bdb3e5, #a3a328, #cccc33, #dbdb97, #b95340, #d64920, #dc7d6a,
+#684678, #b392bb, #d1c7d6, #7cd3af, #bde9d7, #f1faf7, #ff6600, #ff934c, #ffdec9,
+#6b6262, #998c8c, #c6b8b8, #333333, #999999, #cccccc, #303a4c, #566986, #dee9ea,
+#463939, #7d7474, #b5afaf, #5e717d, #7e8d97, #bbcdd1, #e4ddd4, #dcdfe1, #d0cbc8,
+#977b6c, #b6a298, #eae4e1, #808590, #a2a6b0, #d0d2d7, #544968, #c0b3ab, #bcb5c8;
+
+// Decide if text color should be bright or dark depending on background color
+@function text-color($bg-color, $bright:#fff, $dark:#333) {
+  $value: (299*red($bg-color) + 587*green($bg-color) + 114*blue($bg-color)) / 1000;
+
+  @if $value > 127 {
+    @return $dark;
+  } @else {
+    @return $bright;
+  }
+}
+
+@for $i from 1 through length($colors) {
+  $color: nth($colors, $i);
+
+  .color-#{$i - 1} {
+    color: text-color($color);
+    background-color: $color;
+    .input-control {
+      input {
+        color: text-color($color);
+        background-color: text-color(text-color($color));
+        &::-webkit-input-placeholder {
+          color: text-color($color);
+        }
+        &:-ms-input-placeholder {
+          color: text-color($color);
+        }
+        &:-moz-placeholder {
+          color: text-color($color);
+        }
+      }
+    }
+  }
+}
+
+
+

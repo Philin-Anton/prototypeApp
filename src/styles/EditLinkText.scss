@@ -1,0 +1,48 @@
+.editlinktext-component {
+  label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    &.error{
+      input{
+        color: red;
+        border: 1px solid red;
+      }
+    }
+    span {
+      margin-right: 1em;
+    }
+    input {
+      flex: 1 1 90%;
+      box-sizing: border-box;
+      height: 2em;
+      padding: 0 1em;
+      border: 1px solid #ddd;
+    }
+  }
+  .controlsPopUp {
+    display: flex;
+    justify-content: space-between;
+    .cancel,
+    .save {
+      border: 0;
+      background-color: transparent;
+      padding-top: 0.214em;
+      cursor: pointer;
+    }
+    .cancel {
+      color: #333;
+    }
+    .save {
+      padding-left: 0.714em;
+      padding-right: 0.714em;
+      background-color: #222;
+      color: #fff;
+      &.error{
+        color: red;
+        border: 1px solid red;
+      }
+    }
+  }
+}
