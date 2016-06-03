@@ -1,2 +1,2 @@
 # prototypeApp
-http://philin-anton.github.io/prototypeApp
+http://philin-anton.github.io/prototypeApp/dist/#/
